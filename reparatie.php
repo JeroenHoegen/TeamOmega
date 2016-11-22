@@ -60,10 +60,11 @@
 						if(response.success) {					
 							$('html, body').animate({ scrollTop: 0 }, 'fast');
 							$('#alert-success').fadeIn(500).delay(1000).fadeOut(500);
-							$('#statusupdates table').append('<tr id="'+response.id+'"><td>'+response.username+'</td><td>'+response.date+'</td><td>'+response.time+'</td><td>'+response.statusupdate+'</td><td><a class="removeStatus" id="'+response.id+'"><i class="fa fa-trash-o fa-lg"></i></a></td></tr>');
-							if(response.newstatus == 2) {
+							
+							if(response.newstatus != null) {
 								window.location = window.location;
 							}
+							$('#statusupdates table').append('<tr id="'+response.id+'"><td>'+response.username+'</td><td>'+response.date+'</td><td>'+response.time+'</td><td>'+response.statusupdate+'</td><td><a class="removeStatus" id="'+response.id+'"><i class="fa fa-trash-o fa-lg"></i></a></td></tr>');
 						} else {
 							$('#alert-failed').fadeIn(500).delay(1000).fadeOut(500);  
 						}
