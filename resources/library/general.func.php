@@ -1,6 +1,6 @@
 <?php
 	//We need to require config.php because of the database settings
-	require $_SERVER['DOCUMENT_ROOT'].'/omega/resources/config.php';;
+	require $_SERVER['DOCUMENT_ROOT'].'/omega/resources/config.php';
 
 	//Returns the PDO connection
 	function getConnection() {
