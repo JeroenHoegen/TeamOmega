@@ -254,7 +254,7 @@
 												<th>Datum</th>
 												<th>Tijd</th>
 												<th>Omschrijving</th>
-												<th>Actie</th>
+												<th></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -270,7 +270,7 @@
 														echo '<td>'.filterData($row['datum']).'</td>';													
 														echo '<td>'.filterData($row['tijd']).'</td>';													
 														echo '<td>'.filterData($row['omschrijving']).'</td>';													
-														if(filterData($row['verwijderbaar']) == 1 && $userData['role'] < 3) {
+														if(filterData($row['verwijderbaar']) == 1 && $userData['role'] < 3 && $reparatieData[0]['status'] != 2) {
 															echo '<td><a class="removeStatus" id="'.filterData($row['id']).'"><i class="fa fa-trash-o fa-lg"></i></a></td>';							
 														} else {
 															echo '<td></td>';
