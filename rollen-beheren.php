@@ -53,8 +53,6 @@
 						if(response.success) {					
 							$('#alert-success').fadeIn(500).delay(1000).fadeOut(500);
 							$('input').val('');
-						} else if(response.matchfail) {
-							$('#alert-failed').fadeIn(500).delay(1000).fadeOut(500); 
 						} else {
 							$('#alert-failed-2').fadeIn(500).delay(1000).fadeOut(500);  
 						}
@@ -136,7 +134,7 @@
 										</div>
 										<div class="form-group">
 											<label>Klant verwijderen</label>
-											<select class="form-control" name="klantverwijderen" tabindex="1">
+											<select class="form-control" name="klantverwijderen" tabindex="3">
 												<option value="3" <?php if($roleInformation['klantverwijderen'] == 3) {echo ' selected';} ?>>Stagair</option>
 												<option value="2" <?php if($roleInformation['klantverwijderen'] == 2) {echo ' selected';} ?>>Medewerker</option>
 												<option value="1" <?php if($roleInformation['klantverwijderen'] == 1) {echo ' selected';} ?>>Beheerder</option>
@@ -144,7 +142,7 @@
 										</div>
 										<div class="form-group">
 											<label>Reparatie toevoegen</label>
-											<select class="form-control" name="reparatietoevoegen" tabindex="1">
+											<select class="form-control" name="reparatietoevoegen" tabindex="5">
 												<option value="3" <?php if($roleInformation['reparatietoevoegen'] == 3) {echo ' selected';} ?>>Stagair</option>
 												<option value="2" <?php if($roleInformation['reparatietoevoegen'] == 2) {echo ' selected';} ?>>Medewerker</option>
 												<option value="1" <?php if($roleInformation['reparatietoevoegen'] == 1) {echo ' selected';} ?>>Beheerder</option>
@@ -152,7 +150,7 @@
 										</div>
 										<div class="form-group">
 											<label>Reparatie verwijderen</label>
-											<select class="form-control" name="reparatieverwijderen" tabindex="1">
+											<select class="form-control" name="reparatieverwijderen" tabindex="7">
 												<option value="3" <?php if($roleInformation['reparatieverwijderen'] == 3) {echo ' selected';} ?>>Stagair</option>
 												<option value="2" <?php if($roleInformation['reparatieverwijderen'] == 2) {echo ' selected';} ?>>Medewerker</option>
 												<option value="1" <?php if($roleInformation['reparatieverwijderen'] == 1) {echo ' selected';} ?>>Beheerder</option>
@@ -160,7 +158,7 @@
 										</div>
 										<div class="form-group">
 											<label>Eigen wachtwoord wijzigen</label>
-											<select class="form-control" name="wachtwoordwijzigen" tabindex="1">
+											<select class="form-control" name="wachtwoordwijzigen" tabindex="9">
 												<option value="3" <?php if($roleInformation['wachtwoordwijzigen'] == 3) {echo ' selected';} ?>>Stagair</option>
 												<option value="2" <?php if($roleInformation['wachtwoordwijzigen'] == 2) {echo ' selected';} ?>>Medewerker</option>
 												<option value="1" <?php if($roleInformation['wachtwoordwijzigen'] == 1) {echo ' selected';} ?>>Beheerder</option>
@@ -170,7 +168,7 @@
 									<div class="col-lg-6">
 										<div class="form-group">
 											<label>Klant bewerken</label>
-											<select class="form-control" name="klantbewerken" tabindex="1">
+											<select class="form-control" name="klantbewerken" tabindex="2">
 												<option value="3" <?php if($roleInformation['klantbewerken'] == 3) {echo ' selected';} ?>>Stagair</option>
 												<option value="2" <?php if($roleInformation['klantbewerken'] == 2) {echo ' selected';} ?>>Medewerker</option>
 												<option value="1" <?php if($roleInformation['klantbewerken'] == 1) {echo ' selected';} ?>>Beheerder</option>
@@ -178,7 +176,7 @@
 										</div>
 										<div class="form-group">
 											<label>Klanten exporteren</label>
-											<select class="form-control" name="klantenexporteren" tabindex="1">
+											<select class="form-control" name="klantenexporteren" tabindex="4">
 												<option value="3" <?php if($roleInformation['klantenexporteren'] == 3) {echo ' selected';} ?>>Stagair</option>
 												<option value="2" <?php if($roleInformation['klantenexporteren'] == 2) {echo ' selected';} ?>>Medewerker</option>
 												<option value="1" <?php if($roleInformation['klantenexporteren'] == 1) {echo ' selected';} ?>>Beheerder</option>
@@ -186,7 +184,7 @@
 										</div>
 										<div class="form-group">
 											<label>Reparatie bewerken</label>
-											<select class="form-control" name="reparatiebewerken" tabindex="1">
+											<select class="form-control" name="reparatiebewerken" tabindex="6">
 												<option value="3" <?php if($roleInformation['reparatiebewerken'] == 3) {echo ' selected';} ?>>Stagair</option>
 												<option value="2" <?php if($roleInformation['reparatiebewerken'] == 2) {echo ' selected';} ?>>Medewerker</option>
 												<option value="1" <?php if($roleInformation['reparatiebewerken'] == 1) {echo ' selected';} ?>>Beheerder</option>
@@ -194,7 +192,7 @@
 										</div>
 										<div class="form-group">
 											<label>Accounts beheren</label>
-											<select class="form-control" name="accountsbeheren" tabindex="1">
+											<select class="form-control" name="accountsbeheren" tabindex="8">
 												<option value="3" <?php if($roleInformation['accountsbeheren'] == 3) {echo ' selected';} ?>>Stagair</option>
 												<option value="2" <?php if($roleInformation['accountsbeheren'] == 2) {echo ' selected';} ?>>Medewerker</option>
 												<option value="1" <?php if($roleInformation['accountsbeheren'] == 1) {echo ' selected';} ?>>Beheerder</option>
