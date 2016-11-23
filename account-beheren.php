@@ -113,6 +113,7 @@
 					<li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
 					<?php if($userData['role'] == 1) { ?>
 					<li class="active"><a href="accounts.php"><i class="fa fa-id-card"></i> Accounts beheren</a></li>
+					<li><a href="rollen-beheren.php"><i class="fa fa-briefcase"></i> Rollen beheren</a></li>
 					<?php } ?>
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">
@@ -162,11 +163,11 @@
 										</div>
 										<div class="form-group">
 											<label>Rol</label>
-												<select class="form-control" name="rol" id="rol" tabindex="3">
-													<option value="3" <?php if($userDataByUsername[0]['rol'] == 3) {echo ' selected';} ?>>Stagair</option>
-													<option value="2" <?php if($userDataByUsername[0]['rol'] == 2) {echo ' selected';} ?>>Medewerker</option>
-													<option value="1" <?php if($userDataByUsername[0]['rol'] == 1) {echo ' selected';} ?>>Beheerder</option>
-												</select>
+											<select class="form-control" name="rol" id="rol" tabindex="3">
+												<option value="3" <?php if($userDataByUsername[0]['rol'] == 3) {echo ' selected';} ?>>Stagair</option>
+												<option value="2" <?php if($userDataByUsername[0]['rol'] == 2) {echo ' selected';} ?>>Medewerker</option>
+												<option value="1" <?php if($userDataByUsername[0]['rol'] == 1) {echo ' selected';} ?>>Beheerder</option>
+											</select>
 										</div>
 									</div>
 									<div class="col-lg-6">
