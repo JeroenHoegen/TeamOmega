@@ -150,6 +150,7 @@
 			checkAuthority('accountsbeheren');
 			
 			$query = $connection->prepare('update functierol set minimalerol = case naam
+										   when "overzichtbekijken" then 3
 										   when "klanttoevoegen" then :klanttoevoegen
 										   when "klantbewerken" then :klantbewerken
 										   when "klantverwijderen" then :klantverwijderen
