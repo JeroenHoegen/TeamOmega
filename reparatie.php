@@ -6,7 +6,7 @@
 	checkLogin();
 	
 	//First check if the user has authority
-	checkAuthority(3);
+	checkAuthority('overzichtbekijken');
 	
 	//Set all the userdata to an array
 	$userData = getUserData();
@@ -147,7 +147,7 @@
                     <li><a href="index.php"><i class="fa fa-bullseye"></i> Overzicht</a></li>
                     <li class="active"><a href="klanten.php"><i class="fa fa-tasks"></i> Klanten</a></li>
 					<li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
-					<?php if($userData['role'] == 1) { ?>
+					<?php if($userData['role'] == getAuthorityLevel('accountsbeheren')) { ?>
 					<li><a href="accounts.php"><i class="fa fa-id-card"></i> Accounts beheren</a></li>
 					<li><a href="rollen-beheren.php"><i class="fa fa-briefcase"></i> Rollen beheren</a></li>
 					<?php } ?>
@@ -170,7 +170,7 @@
                 <div class="col-lg-8">
                     <h1 id="naam">Reparatie - <?php echo filterData($reparatieData[0]['id']); ?></h1>
                 </div>
-				<?php if($userData['role'] < 3) { ?>
+				<?php if($userData['role'] <= getAuthorityLevel('reparatieverwijderen')) { ?>
 				<div class="col-lg-4 text-right top-btn">
 					<a class="btn btn-danger" id="removeReparatie">Verwijderen</a>
 				</div>
@@ -272,7 +272,7 @@
 														echo '<td>'.filterData($row['datum']).'</td>';													
 														echo '<td>'.filterData($row['tijd']).'</td>';													
 														echo '<td>'.filterData($row['omschrijving']).'</td>';													
-														if(filterData($row['verwijderbaar']) == 1 && $userData['role'] < 3 && $reparatieData[0]['status'] != 2) {
+														if(filterData($row['verwijderbaar']) == 1 && $userData['role'] < getAuthorityLevel('overzichtbekijken') && $reparatieData[0]['status'] != 2) {
 															echo '<td><a class="removeStatus" id="'.filterData($row['id']).'"><i class="fa fa-trash-o fa-lg"></i></a></td>';							
 														} else {
 															echo '<td></td>';

@@ -15,7 +15,7 @@
 		//Update customer data (action=updateCustomer) or update reparatie data (action=updateReparatie)
 		if($_POST['action'] == 'updateCustomer') {
 			//First check if the user has authority
-			checkAuthority(3);
+			checkAuthority('klantbewerken');
 			
 			$query = $connection->prepare("update klant set voornaam=:voornaam, achternaam=:achternaam, adres=:adres, woonplaats=:woonplaats, postcode=:postcode, email=:email, telefoonnummer=:telefoonnummer where id=:id"); 
 			$query->bindParam(':id', $_POST['id']);
@@ -39,7 +39,7 @@
 			}
 		} else if($_POST['action'] == 'updateReparatie') {
 			//First check if the user has authority
-			checkAuthority(3);
+			checkAuthority('reparatiebewerken');
 			
 			//Here we check if the status of the reparatie is 'afgerond'. In that case we
 			//need to check if the customer needs to be informed by email. $sendMail returns
@@ -101,7 +101,7 @@
 			}
 		} else if($_POST['action'] == 'updatePassword') {
 			//First check if the user has authority
-			checkAuthority(3);
+			checkAuthority('wachtwoordwijzigen');
 			
 			//Check if the provided password match
 			if($_POST['nieuwwachtwoord'] == $_POST['bevestigwachtwoord']) {
@@ -129,7 +129,7 @@
 			}
 		} else if($_POST['action'] == 'updateUser') {
 			//First check if the user has authority
-			checkAuthority(1);
+			checkAuthority('accountsbeheren');
 			
 			$query = $connection->prepare('update gebruiker set rol=:rol, voornaam=:voornaam, achternaam=:achternaam where gebruikersnaam=:gebruikersnaam');
 			$query->bindParam(':rol', $_POST['rol']);
@@ -147,7 +147,7 @@
 			}
 		} else if($_POST['action'] == 'updateRole') {
 			//First check if the user has authority
-			checkAuthority(1);
+			checkAuthority('accountsbeheren');
 			
 			$query = $connection->prepare('update functierol set minimalerol = case naam
 										   when "klanttoevoegen" then :klanttoevoegen

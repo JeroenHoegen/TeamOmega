@@ -16,7 +16,7 @@
 		//or add user (action=addUser)
 		if($_POST['action'] == 'addCustomer') {
 			//First check if the user has authority
-			checkAuthority(3);
+			checkAuthority('klanttoevoegen');
 			
 			$query = $connection->prepare("insert into klant values(null, :voornaam, :achternaam, :adres, :woonplaats, :postcode, :email, :telefoonnummer)"); 
 			$query->bindParam(':voornaam', $_POST['voornaam']);
@@ -38,7 +38,7 @@
 			}
 		} else if($_POST['action'] == 'addReparatie') {
 			//First check if the user has authority
-			checkAuthority(3);
+			checkAuthority('reparatietoevoegen');
 			
 			$query = $connection->prepare("insert into reparatie values(null, :klantid, :medewerker, :startdatum, :omschrijving, null, null, 0, 0)"); 
 			$query->bindParam(':klantid', $_POST['id']);
@@ -68,7 +68,7 @@
 			}
 		} else if($_POST['action'] == 'addUser') {
 			//First check if the user has authority
-			checkAuthority(1);
+			checkAuthority('accountsbeheren');
 		
 			//Convert the password to a md5 hash, since bindParam
 			//only accepts one variable
