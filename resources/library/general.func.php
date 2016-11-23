@@ -33,11 +33,11 @@
 	//Checks if the user has the authority to access a certain page
 	//the level parameter is the minumum level needed for access (1, 2 ,3)
 	//returns to index.php on false
-	function checkAuthority($level) {
+	function checkAuthority($action) {
 		if(session_status() == PHP_SESSION_NONE) {
 			session_start();
 		}
-		if($_SESSION['role'] > $level) {
+		if($_SESSION['role'] > getAuthorityLevel($action)) {
 			header('Location: /omega/index.php');
 			die();
 		}
