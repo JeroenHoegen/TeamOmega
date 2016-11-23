@@ -145,6 +145,39 @@
 			} else {
 				$response['success'] = false;
 			}
+		} else if($_POST['action'] == 'updateRole') {
+			//First check if the user has authority
+			checkAuthority(1);
+			
+			$query = $connection->prepare('update functierol set minimalerol = case naam
+										   when "klanttoevoegen" then :klanttoevoegen
+										   when "klantbewerken" then :klantbewerken
+										   when "klantverwijderen" then :klantverwijderen
+										   when "klantenexporteren" then :klantenexporteren
+										   when "reparatietoevoegen" then :reparatietoevoegen
+										   when "reparatiebewerken" then :reparatiebewerken
+										   when "reparatieverwijderen" then :reparatieverwijderen
+										   when "accountsbeheren" then :accountsbeheren
+										   when "wachtwoordwijzigen" then :wachtwoordwijzigen
+										   end');
+			$query->bindParam(':klanttoevoegen', $_POST['klanttoevoegen']);
+			$query->bindParam(':klantbewerken', $_POST['klantbewerken']);
+			$query->bindParam(':klantverwijderen', $_POST['klantverwijderen']);
+			$query->bindParam(':klantenexporteren', $_POST['klantenexporteren']);
+			$query->bindParam(':reparatietoevoegen', $_POST['reparatietoevoegen']);
+			$query->bindParam(':reparatiebewerken', $_POST['reparatiebewerken']);
+			$query->bindParam(':reparatieverwijderen', $_POST['reparatieverwijderen']);
+			$query->bindParam(':accountsbeheren', $_POST['accountsbeheren']);
+			$query->bindParam(':wachtwoordwijzigen', $_POST['wachtwoordwijzigen']);
+				
+			$query->execute();
+				
+			//If update statement succeed
+			if($query->rowCount()) {
+				$response['success'] = true;
+			} else {
+				$response['success'] = false;
+			}
 		}
 	} else {
 		$response['success'] = false;
