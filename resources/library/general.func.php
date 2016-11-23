@@ -43,6 +43,23 @@
 		}
 	}
 	
+	//This function returns the needed minimal authority level for
+	//an action from the database. Returns the level on success
+	//and 1 (the highest possible security level) on failure.
+	function getAuthorityLevel($action) {
+		$connection = getConnection();
+		$query = $connection->prepare('select minimalerol from functierol where naam=:naam');
+		$query->bindParam(':naam', $action);
+		$query->execute();
+		
+		if($query->rowCount() > 0) {
+			$authorityData = $query->fetchAll();
+			return $authorityData[0]['minimalerol'];
+		} else {
+			return 1;
+		}
+	}
+	
 	//Returns all the user data as an array
 	function getUserData() {
 		$userData = array('username' => $_SESSION['username'], 
