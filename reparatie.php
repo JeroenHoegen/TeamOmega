@@ -63,9 +63,9 @@
 							
 							if(response.newstatus != null) {
 								window.location = window.location;
+								$('#statusupdates table').append('<tr id="'+response.id+'"><td>'+response.username+'</td><td>'+response.date+'</td><td>'+response.time+'</td><td>'+response.statusupdate+'</td><td><a class="removeStatus" id="'+response.id+'"><i class="fa fa-trash-o fa-lg"></i></a></td></tr>');
+								$('#statusupdate').val('');
 							}
-							$('#statusupdates table').append('<tr id="'+response.id+'"><td>'+response.username+'</td><td>'+response.date+'</td><td>'+response.time+'</td><td>'+response.statusupdate+'</td><td><a class="removeStatus" id="'+response.id+'"><i class="fa fa-trash-o fa-lg"></i></a></td></tr>');
-							$('#statusupdate').val('');
 						} else if(response.statusupdate != null) {
 							$('#alert-success').fadeIn(500).delay(1000).fadeOut(500); 
 							$('#statusupdates table').append('<tr id="'+response.id+'"><td>'+response.username+'</td><td>'+response.date+'</td><td>'+response.time+'</td><td>'+response.statusupdate+'</td><td><a class="removeStatus" id="'+response.id+'"><i class="fa fa-trash-o fa-lg"></i></a></td></tr>');
@@ -224,7 +224,7 @@
 											<label>Omschrijving</label>
 											<textarea class="form-control" rows="5" name="omschrijving" placeholder="Omschrijving" tabindex="4" required <?php if($reparatieData[0]['status'] == 2) {echo ' disabled';} ?>><?php echo filterData($reparatieData[0]['omschrijving']); ?></textarea>
 										</div>
-										<div class="form-group" <?php if($reparatieData[0]['emailverstuurd'] == 0) { ?> <?php } ?> id="emailversturen">
+										<div class="form-group no-display" <?php if($reparatieData[0]['emailverstuurd'] == 0) { ?> <?php } ?> id="emailversturen">
 											<label>E-mail versturen naar klant:</label>
 											<select class="form-control" name="emailversturen" tabindex="6" <?php if($reparatieData[0]['emailverstuurd'] != 0 || $reparatieData[0]['status'] == 2) {echo ' disabled';} ?>>
 												<option value="0" <?php if($reparatieData[0]['emailverstuurd'] == 0) {echo ' selected';} ?>>nee</option>
