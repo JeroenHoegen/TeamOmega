@@ -297,6 +297,10 @@
 									<label>Datum invoering</label>
 									<input type="text" class="form-control" name="startdatum" value="<?php echo date('d-m-Y'); ?>" placeholder="Datum invoering" tabindex="2" readonly>
 								</div>
+								<div class="form-group">
+									<label>Serienummer</label>
+									<input type="text" class="form-control" name="serienummer" placeholder="Serienummer" tabindex="4" required>
+								</div>
 							</div>
 							<div class="col-lg-12">
 								<button type="submit" class="btn btn-primary">Toevoegen</button>

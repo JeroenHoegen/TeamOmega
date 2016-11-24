@@ -202,7 +202,7 @@
 									<input type="hidden" name="id" value="<?php echo filterData($reparatieData[0]['id']); ?>">
 									<input type="hidden" name="customerid" value="<?php echo filterData($_GET['returnid']); ?>">
 									<input type="hidden" name="status" value="<?php echo filterData($reparatieData[0]['status'], true); ?>">
-									<div class="col-lg-12">
+									<div class="col-lg-6">
 										<div class="form-group">
 											<label>Status:</label>
 											<select class="form-control" name="newstatus" id="newstatus" tabindex="1" <?php if($reparatieData[0]['status'] == 2) {echo ' disabled';} ?>>
@@ -211,8 +211,6 @@
 												<option value="2" <?php if($reparatieData[0]['status'] == 2) {echo ' selected';} ?>>Afgerond</option>
 											</select>
 										</div>
-									</div>
-									<div class="col-lg-6">
 										<div class="form-group">
 											<label>Garantie</label>
 											<select class="form-control" name="garantie" tabindex="2" <?php if($reparatieData[0]['status'] == 2) {echo ' disabled';} ?>>
@@ -238,8 +236,12 @@
 											<input type="text" class="form-control" name="kosten" placeholder="Kosten" value="<?php echo filterData($reparatieData[0]['kosten']); ?>" tabindex="3" <?php if($reparatieData[0]['status'] == 2) {echo ' disabled';} ?>>
 										</div>
 										<div class="form-group">
+											<label>Serienummer</label>
+											<input type="text" class="form-control" name="serienummer" placeholder="Serienummer" value="<?php echo filterData($reparatieData[0]['serienummer']); ?>" tabindex="5" <?php if($reparatieData[0]['status'] == 2) {echo ' disabled';} ?>>
+										</div>
+										<div class="form-group">
 											<label>Status update:</label>
-											<textarea class="form-control" rows="5" name="statusupdate" id="statusupdate" placeholder="Status update" tabindex="5" <?php if($reparatieData[0]['status'] == 2) {echo ' disabled';} ?>></textarea>
+											<textarea class="form-control" rows="5" name="statusupdate" id="statusupdate" placeholder="Status update" tabindex="7" <?php if($reparatieData[0]['status'] == 2) {echo ' disabled';} ?>></textarea>
 										</div>
 									</div>
 									<div class="col-lg-12">

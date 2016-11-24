@@ -46,8 +46,9 @@
 			//true or false.
 			$sendMail = ($_POST['newstatus'] == 2 && isset($_POST['emailversturen']) && $_POST['emailversturen'] == 1) ? true : false;
 			
-			$query = $connection->prepare('update reparatie set garantie=:garantie, kosten=:kosten, omschrijving=:omschrijving, status=:status, emailverstuurd=:emailverstuurd where id=:id');
+			$query = $connection->prepare('update reparatie set serienummer=:serienummer, garantie=:garantie, kosten=:kosten, omschrijving=:omschrijving, status=:status, emailverstuurd=:emailverstuurd where id=:id');
 			$query->bindParam(':id', $_POST['id']);
+			$query->bindParam(':serienummer', $_POST['serienummer']);
 			$query->bindParam(':garantie', $_POST['garantie']);
 			$query->bindParam(':kosten', $_POST['kosten']);
 			$query->bindParam(':omschrijving', $_POST['omschrijving']);

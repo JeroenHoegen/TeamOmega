@@ -40,9 +40,10 @@
 			//First check if the user has authority
 			checkAuthority('reparatietoevoegen');
 			
-			$query = $connection->prepare("insert into reparatie values(null, :klantid, :medewerker, :startdatum, :omschrijving, null, null, 0, 0)"); 
+			$query = $connection->prepare("insert into reparatie values(null, :klantid, :medewerker, :serienummer, :startdatum, :omschrijving, null, null, 0, 0)"); 
 			$query->bindParam(':klantid', $_POST['id']);
 			$query->bindParam(':medewerker', $_POST['medewerker']);
+			$query->bindParam(':serienummer', $_POST['serienummer']);
 			$query->bindParam(':startdatum', $_POST['startdatum']);
 			$query->bindParam(':omschrijving', $_POST['omschrijving']);
 				
