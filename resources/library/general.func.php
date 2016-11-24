@@ -1,6 +1,6 @@
 <?php
 	//We need to require config.php because of the database settings
-	require $_SERVER['DOCUMENT_ROOT'].'/omega/resources/config.php';;
+	require $_SERVER['DOCUMENT_ROOT'].'/omega/resources/config.php';
 
 	//Returns the PDO connection
 	function getConnection() {
@@ -33,13 +33,30 @@
 	//Checks if the user has the authority to access a certain page
 	//the level parameter is the minumum level needed for access (1, 2 ,3)
 	//returns to index.php on false
-	function checkAuthority($level) {
+	function checkAuthority($action) {
 		if(session_status() == PHP_SESSION_NONE) {
 			session_start();
 		}
-		if($_SESSION['role'] > $level) {
+		if($_SESSION['role'] > getAuthorityLevel($action)) {
 			header('Location: /omega/index.php');
 			die();
+		}
+	}
+	
+	//This function returns the needed minimal authority level for
+	//an action from the database. Returns the level on success
+	//and 1 (the highest possible security level) on failure.
+	function getAuthorityLevel($action) {
+		$connection = getConnection();
+		$query = $connection->prepare('select minimalerol from functierol where naam=:naam');
+		$query->bindParam(':naam', $action);
+		$query->execute();
+		
+		if($query->rowCount() > 0) {
+			$authorityData = $query->fetchAll();
+			return $authorityData[0]['minimalerol'];
+		} else {
+			return 1;
 		}
 	}
 	
@@ -53,8 +70,8 @@
 	}
 	
 	//This functions removes special characters in order to prevent XSS
-	function filterData($data) {
-		return (empty($data) && $data != 0) ? '-' : htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+	function filterData($data, $status=false) {
+		return (empty($data) && !$status) ? '-' : htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
 	}
 	
 	//Get the customer data by id returns array on success

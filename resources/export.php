@@ -8,7 +8,7 @@
     
 	if(isset($_POST['exportgegevens']) && $_POST['action'] == 'export') {
 		//First check if the user has authority
-		checkAuthority(1);
+		checkAuthority('klantenexporteren');
 		
 		//Assign the connection to a local connection variable
 		$connection = getConnection();		

@@ -6,7 +6,7 @@
 	checkLogin();
 	
 	//First check if the user has authority
-	checkAuthority(3);
+	checkAuthority('overzichtbekijken');
 	
 	//Set all the userdata to an array
 	$userData = getUserData();
@@ -128,8 +128,9 @@
                     <li><a href="index.php"><i class="fa fa-bullseye"></i> Overzicht</a></li>
                     <li class="active"><a href="klanten.php"><i class="fa fa-tasks"></i> Klanten</a></li>
 					<li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
-					<?php if($userData['role'] == 1) { ?>
+					<?php if($userData['role'] == getAuthorityLevel('accountsbeheren')) { ?>
 					<li><a href="accounts.php"><i class="fa fa-id-card"></i> Accounts beheren</a></li>
+					<li><a href="rollen-beheren.php"><i class="fa fa-briefcase"></i> Rollen beheren</a></li>
 					<?php } ?>
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">
@@ -150,16 +151,16 @@
                 <div class="col-lg-8">
                     <h1 id="naam">Klant - <?php echo filterData($customerData[0]['voornaam']).' '.filterData($customerData[0]['achternaam']); ?></h1>
                 </div>
-				<?php if($userData['role'] < 3) { ?>
+				<?php if($userData['role'] <= getAuthorityLevel('klantverwijderen')) { ?>
 				<div class="col-lg-4 text-right top-btn">
 					<a class="btn btn-danger" id="removeCustomer">Verwijderen</a>
 				</div>
 				<?php } ?>
             </div>
-			<div id="alert-failed" class="alert alert-danger" style="display: none;">
+			<div id="alert-failed" class="alert alert-danger no-display">
 				<strong>Oeps!</strong> Controleer of alle velden zijn ingevuld.
 			</div>
-			<div id="alert-success" class="alert alert-success" style="display: none;">
+			<div id="alert-success" class="alert alert-success no-display">
 				<strong><i class="fa fa-thumbs-up fa-lg"></i></strong> De gegevens zijn met succes gewijzigd.
 			</div>
 			<div class="row">
@@ -274,7 +275,7 @@
 					<h4 class="modal-title">Nieuwe reparatie</h4>
 				</div>
 				<div class="modal-body">
-					<div id="alert-failed" class="alert alert-danger" style="display: none;">
+					<div id="alert-failed" class="alert alert-danger no-display">
 						<strong>Oeps!</strong> Controleer of alle velden zijn ingevuld.
 					</div>
 					<div class="row">

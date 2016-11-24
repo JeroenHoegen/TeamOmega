@@ -15,7 +15,7 @@
 		//Update customer data (action=updateCustomer) or update reparatie data (action=updateReparatie)
 		if($_POST['action'] == 'updateCustomer') {
 			//First check if the user has authority
-			checkAuthority(3);
+			checkAuthority('klantbewerken');
 			
 			$query = $connection->prepare("update klant set voornaam=:voornaam, achternaam=:achternaam, adres=:adres, woonplaats=:woonplaats, postcode=:postcode, email=:email, telefoonnummer=:telefoonnummer where id=:id"); 
 			$query->bindParam(':id', $_POST['id']);
@@ -39,7 +39,7 @@
 			}
 		} else if($_POST['action'] == 'updateReparatie') {
 			//First check if the user has authority
-			checkAuthority(3);
+			checkAuthority('reparatiebewerken');
 			
 			//Here we check if the status of the reparatie is 'afgerond'. In that case we
 			//need to check if the customer needs to be informed by email. $sendMail returns
@@ -66,21 +66,7 @@
 					//Get the email from the customerData
 					$email = $customerData[0]['email'];
 					
-					mail($email, 'Uw reparatie is afgerond', 'Hier een kort berichtje en een groet.');
-				}
-				
-				//Here we check if the user added information to the 'statusupdate' field
-				//if so we need to add a custom status to the reparatie status.
-				if(trim($_POST['statusupdate']) != '') {
-					$statusSuccess = addStatusToReparatie($_POST['id'], getUserData()['username'], date('d-m-Y'), date('h:m'), $_POST['statusupdate'], 1);
-					if($statusSuccess != false) {
-						//If addStatusToReparatie succeeds send back the data to the client
-						$response['id'] = $statusSuccess;
-						$response['username'] = getUserData()['username'];
-						$response['date'] = date('d-m-Y');
-						$response['time'] = date('h:m');
-						$response['statusupdate'] = filterData($_POST['statusupdate']);
-					}
+					mail($email, 'Uw reparatie is afgerond', 'Hier een kort berichtje');
 				}
 				
 				//If the status changes we also need to add an update to the reparatie status
@@ -99,9 +85,23 @@
 			} else {
 				$response['success'] = false;
 			}
+			
+			//Here we check if the user added information to the 'statusupdate' field
+			//if so we need to add a custom status to the reparatie status.
+			if(trim($_POST['statusupdate']) != '') {
+				$statusSuccess = addStatusToReparatie($_POST['id'], getUserData()['username'], date('d-m-Y'), date('h:m'), $_POST['statusupdate'], 1);
+				if($statusSuccess != false) {
+					//If addStatusToReparatie succeeds send back the data to the client
+					$response['id'] = $statusSuccess;
+					$response['username'] = getUserData()['username'];
+					$response['date'] = date('d-m-Y');
+					$response['time'] = date('h:m');
+					$response['statusupdate'] = filterData($_POST['statusupdate']);
+				}
+			}
 		} else if($_POST['action'] == 'updatePassword') {
 			//First check if the user has authority
-			checkAuthority(3);
+			checkAuthority('wachtwoordwijzigen');
 			
 			//Check if the provided password match
 			if($_POST['nieuwwachtwoord'] == $_POST['bevestigwachtwoord']) {
@@ -129,13 +129,47 @@
 			}
 		} else if($_POST['action'] == 'updateUser') {
 			//First check if the user has authority
-			checkAuthority(1);
+			checkAuthority('accountsbeheren');
 			
 			$query = $connection->prepare('update gebruiker set rol=:rol, voornaam=:voornaam, achternaam=:achternaam where gebruikersnaam=:gebruikersnaam');
 			$query->bindParam(':rol', $_POST['rol']);
 			$query->bindParam(':voornaam', $_POST['voornaam']);
 			$query->bindParam(':achternaam', $_POST['achternaam']);
 			$query->bindParam(':gebruikersnaam', $_POST['gebruikersnaam']);
+				
+			$query->execute();
+				
+			//If update statement succeed
+			if($query->rowCount()) {
+				$response['success'] = true;
+			} else {
+				$response['success'] = false;
+			}
+		} else if($_POST['action'] == 'updateRole') {
+			//First check if the user has authority
+			checkAuthority('accountsbeheren');
+			
+			$query = $connection->prepare('update functierol set minimalerol = case naam
+										   when "overzichtbekijken" then 3
+										   when "klanttoevoegen" then :klanttoevoegen
+										   when "klantbewerken" then :klantbewerken
+										   when "klantverwijderen" then :klantverwijderen
+										   when "klantenexporteren" then :klantenexporteren
+										   when "reparatietoevoegen" then :reparatietoevoegen
+										   when "reparatiebewerken" then :reparatiebewerken
+										   when "reparatieverwijderen" then :reparatieverwijderen
+										   when "accountsbeheren" then :accountsbeheren
+										   when "wachtwoordwijzigen" then :wachtwoordwijzigen
+										   end');
+			$query->bindParam(':klanttoevoegen', $_POST['klanttoevoegen']);
+			$query->bindParam(':klantbewerken', $_POST['klantbewerken']);
+			$query->bindParam(':klantverwijderen', $_POST['klantverwijderen']);
+			$query->bindParam(':klantenexporteren', $_POST['klantenexporteren']);
+			$query->bindParam(':reparatietoevoegen', $_POST['reparatietoevoegen']);
+			$query->bindParam(':reparatiebewerken', $_POST['reparatiebewerken']);
+			$query->bindParam(':reparatieverwijderen', $_POST['reparatieverwijderen']);
+			$query->bindParam(':accountsbeheren', $_POST['accountsbeheren']);
+			$query->bindParam(':wachtwoordwijzigen', $_POST['wachtwoordwijzigen']);
 				
 			$query->execute();
 				

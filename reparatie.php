@@ -6,7 +6,7 @@
 	checkLogin();
 	
 	//First check if the user has authority
-	checkAuthority(3);
+	checkAuthority('overzichtbekijken');
 	
 	//Set all the userdata to an array
 	$userData = getUserData();
@@ -60,12 +60,18 @@
 						if(response.success) {					
 							$('html, body').animate({ scrollTop: 0 }, 'fast');
 							$('#alert-success').fadeIn(500).delay(1000).fadeOut(500);
-							$('#statusupdates table').append('<tr id="'+response.id+'"><td>'+response.username+'</td><td>'+response.date+'</td><td>'+response.time+'</td><td>'+response.statusupdate+'</td><td><a class="removeStatus" id="'+response.id+'"><i class="fa fa-trash-o fa-lg"></i></a></td></tr>');
-							if(response.newstatus == 2) {
+							
+							if(response.newstatus != null) {
 								window.location = window.location;
 							}
+							$('#statusupdates table').append('<tr id="'+response.id+'"><td>'+response.username+'</td><td>'+response.date+'</td><td>'+response.time+'</td><td>'+response.statusupdate+'</td><td><a class="removeStatus" id="'+response.id+'"><i class="fa fa-trash-o fa-lg"></i></a></td></tr>');
+							$('#statusupdate').val('');
+						} else if(response.statusupdate != null) {
+							$('#alert-success').fadeIn(500).delay(1000).fadeOut(500); 
+							$('#statusupdates table').append('<tr id="'+response.id+'"><td>'+response.username+'</td><td>'+response.date+'</td><td>'+response.time+'</td><td>'+response.statusupdate+'</td><td><a class="removeStatus" id="'+response.id+'"><i class="fa fa-trash-o fa-lg"></i></a></td></tr>');
+							$('#statusupdate').val('');
 						} else {
-							$('#alert-failed').fadeIn(500).delay(1000).fadeOut(500);  
+							$('#alert-failed').fadeIn(500).delay(1000).fadeOut(500);
 						}
                     },
                     error: function() {
@@ -146,8 +152,9 @@
                     <li><a href="index.php"><i class="fa fa-bullseye"></i> Overzicht</a></li>
                     <li class="active"><a href="klanten.php"><i class="fa fa-tasks"></i> Klanten</a></li>
 					<li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
-					<?php if($userData['role'] == 1) { ?>
+					<?php if($userData['role'] == getAuthorityLevel('accountsbeheren')) { ?>
 					<li><a href="accounts.php"><i class="fa fa-id-card"></i> Accounts beheren</a></li>
+					<li><a href="rollen-beheren.php"><i class="fa fa-briefcase"></i> Rollen beheren</a></li>
 					<?php } ?>
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">
@@ -168,16 +175,16 @@
                 <div class="col-lg-8">
                     <h1 id="naam">Reparatie - <?php echo filterData($reparatieData[0]['id']); ?></h1>
                 </div>
-				<?php if($userData['role'] < 3) { ?>
+				<?php if($userData['role'] <= getAuthorityLevel('reparatieverwijderen')) { ?>
 				<div class="col-lg-4 text-right top-btn">
 					<a class="btn btn-danger" id="removeReparatie">Verwijderen</a>
 				</div>
 				<?php } ?>
             </div>
-			<div id="alert-failed" class="alert alert-danger" style="display: none;">
+			<div id="alert-failed" class="alert alert-danger no-display">
 				<strong>Oeps!</strong> Controleer of alle velden zijn ingevuld.
 			</div>
-			<div id="alert-success" class="alert alert-success" style="display: none;">
+			<div id="alert-success" class="alert alert-success no-display">
 				<strong><i class="fa fa-thumbs-up fa-lg"></i></strong> De gegevens zijn met succes gewijzigd.
 			</div>
 			<div class="row">
@@ -194,7 +201,7 @@
 									<input type="hidden" name="action" value="updateReparatie">
 									<input type="hidden" name="id" value="<?php echo filterData($reparatieData[0]['id']); ?>">
 									<input type="hidden" name="customerid" value="<?php echo filterData($_GET['returnid']); ?>">
-									<input type="hidden" name="status" value="<?php echo filterData($reparatieData[0]['status']); ?>">
+									<input type="hidden" name="status" value="<?php echo filterData($reparatieData[0]['status'], true); ?>">
 									<div class="col-lg-12">
 										<div class="form-group">
 											<label>Status:</label>
@@ -217,7 +224,7 @@
 											<label>Omschrijving</label>
 											<textarea class="form-control" rows="5" name="omschrijving" placeholder="Omschrijving" tabindex="4" required <?php if($reparatieData[0]['status'] == 2) {echo ' disabled';} ?>><?php echo filterData($reparatieData[0]['omschrijving']); ?></textarea>
 										</div>
-										<div class="form-group" <?php if($reparatieData[0]['emailverstuurd'] == 0) { ?>style="display: none;" <?php } ?> id="emailversturen">
+										<div class="form-group" <?php if($reparatieData[0]['emailverstuurd'] == 0) { ?> <?php } ?> id="emailversturen">
 											<label>E-mail versturen naar klant:</label>
 											<select class="form-control" name="emailversturen" tabindex="6" <?php if($reparatieData[0]['emailverstuurd'] != 0 || $reparatieData[0]['status'] == 2) {echo ' disabled';} ?>>
 												<option value="0" <?php if($reparatieData[0]['emailverstuurd'] == 0) {echo ' selected';} ?>>nee</option>
@@ -254,7 +261,7 @@
 												<th>Datum</th>
 												<th>Tijd</th>
 												<th>Omschrijving</th>
-												<th>Actie</th>
+												<th></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -270,7 +277,7 @@
 														echo '<td>'.filterData($row['datum']).'</td>';													
 														echo '<td>'.filterData($row['tijd']).'</td>';													
 														echo '<td>'.filterData($row['omschrijving']).'</td>';													
-														if(filterData($row['verwijderbaar']) == 1 && $userData['role'] < 3) {
+														if(filterData($row['verwijderbaar']) == 1 && $userData['role'] < getAuthorityLevel('overzichtbekijken') && $reparatieData[0]['status'] != 2) {
 															echo '<td><a class="removeStatus" id="'.filterData($row['id']).'"><i class="fa fa-trash-o fa-lg"></i></a></td>';							
 														} else {
 															echo '<td></td>';

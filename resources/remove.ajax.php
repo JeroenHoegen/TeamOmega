@@ -15,7 +15,7 @@
 		//Remove customer (action=removeCustomer) or remove reparatie (action=removeReparatie)
 		if($_POST['action'] == 'removeCustomer') {
 			//First check if the user has authority
-			checkAuthority(2);
+			checkAuthority('klantverwijderen');
 			
 			$query = $connection->prepare('delete from klant where id=:id');
 			$query->bindParam(':id', $_POST['id']);
@@ -30,7 +30,7 @@
 			}
 		} else if($_POST['action'] == 'removeReparatie') {
 			//First check if the user has authority
-			checkAuthority(2);
+			checkAuthority('reparatieverwijderen');
 			
 			$query = $connection->prepare('delete from reparatie where id=:id');
 			$query->bindParam(':id', $_POST['id']);
@@ -45,7 +45,7 @@
 			}
 		} else if($_POST['action'] == 'removeStatus') {
 			//First check if the user has authority
-			checkAuthority(2);
+			checkAuthority('overzichtbekijken');
 			
 			$query = $connection->prepare('delete from updates where id=:id');
 			$query->bindParam(':id', $_POST['id']);
@@ -60,7 +60,7 @@
 			}
 		} else if($_POST['action'] == 'removeUser') {
 			//First check if the user has authority
-			checkAuthority(1);
+			checkAuthority('accountsbeheren');
 			
 			$query = $connection->prepare('delete from gebruiker where gebruikersnaam=:gebruikersnaam');
 			$query->bindParam(':gebruikersnaam', $_POST['gebruikersnaam']);

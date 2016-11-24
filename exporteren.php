@@ -6,7 +6,7 @@
 	checkLogin();
 	
 	//First check if the user has authority
-	checkAuthority(1);
+	checkAuthority('klantenexporteren');
 	
 	//Set all the userdata to an array
 	$userData = getUserData();
@@ -27,31 +27,6 @@
 
     <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-	
-	<script>
-		/*$(document).ready(function() {
-			$('#exportForm').on('submit', function(event) {
-				event.preventDefault();
-                $.ajax({
-                    url: 'resources/export.ajax.php',
-                    type: 'post',
-                    data: $(this).serialize(),
-                    dataType: 'json',
-                    success: function(response) {
-						console.log(response);
-						if(response.success) {
-							console.log(response);
-						} else {
-							alert('Er is een fout opgetreden!');
-						}
-                    },
-                    error: function() {
-                        alert('Er is een fout opgetreden!');
-                    }
-                });
-			});
-		});*/
-	</script>
 </head>
 <body>
     <div id="wrapper">
@@ -70,8 +45,9 @@
                     <li><a href="index.php"><i class="fa fa-bullseye"></i> Overzicht</a></li>
                     <li class="active"><a href="klanten.php"><i class="fa fa-tasks"></i> Klanten</a></li>
 					<li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
-					<?php if($userData['role'] == 1) { ?>
+					<?php if($userData['role'] == getAuthorityLevel('accountsbeheren')) { ?>
 					<li><a href="accounts.php"><i class="fa fa-id-card"></i> Accounts beheren</a></li>
+					<li><a href="rollen-beheren.php"><i class="fa fa-briefcase"></i> Rollen beheren</a></li>
 					<?php } ?>
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">
