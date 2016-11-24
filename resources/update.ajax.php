@@ -66,21 +66,7 @@
 					//Get the email from the customerData
 					$email = $customerData[0]['email'];
 					
-					mail($email, 'Uw reparatie is afgerond', 'Hier een kort berichtje en een groet.');
-				}
-				
-				//Here we check if the user added information to the 'statusupdate' field
-				//if so we need to add a custom status to the reparatie status.
-				if(trim($_POST['statusupdate']) != '') {
-					$statusSuccess = addStatusToReparatie($_POST['id'], getUserData()['username'], date('d-m-Y'), date('h:m'), $_POST['statusupdate'], 1);
-					if($statusSuccess != false) {
-						//If addStatusToReparatie succeeds send back the data to the client
-						$response['id'] = $statusSuccess;
-						$response['username'] = getUserData()['username'];
-						$response['date'] = date('d-m-Y');
-						$response['time'] = date('h:m');
-						$response['statusupdate'] = filterData($_POST['statusupdate']);
-					}
+					mail($email, 'Uw reparatie is afgerond', 'Hier een kort berichtje');
 				}
 				
 				//If the status changes we also need to add an update to the reparatie status
@@ -98,6 +84,20 @@
 				$response['success'] = true;
 			} else {
 				$response['success'] = false;
+			}
+			
+			//Here we check if the user added information to the 'statusupdate' field
+			//if so we need to add a custom status to the reparatie status.
+			if(trim($_POST['statusupdate']) != '') {
+				$statusSuccess = addStatusToReparatie($_POST['id'], getUserData()['username'], date('d-m-Y'), date('h:m'), $_POST['statusupdate'], 1);
+				if($statusSuccess != false) {
+					//If addStatusToReparatie succeeds send back the data to the client
+					$response['id'] = $statusSuccess;
+					$response['username'] = getUserData()['username'];
+					$response['date'] = date('d-m-Y');
+					$response['time'] = date('h:m');
+					$response['statusupdate'] = filterData($_POST['statusupdate']);
+				}
 			}
 		} else if($_POST['action'] == 'updatePassword') {
 			//First check if the user has authority

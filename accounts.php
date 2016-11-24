@@ -161,8 +161,8 @@
 					<h4 class="modal-title">Nieuwe gebruiker</h4>
 				</div>
 				<div class="modal-body">
-					<div id="alert-failed" class="alert alert-danger" style="display: none;">
-						<strong>Oeps!</strong> Controleer of de gebruikersnaam wel uniek is
+					<div id="alert-failed" class="alert alert-danger no-display">
+						<strong>Oeps!</strong> Controleer of de gebruikersnaam uniek is
 					</div>
 					<div class="row">
 						<form id="addUserForm">

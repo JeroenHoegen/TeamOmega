@@ -172,7 +172,7 @@
 					<h4 class="modal-title">Nieuwe klant</h4>
 				</div>
 				<div class="modal-body">
-					<div id="alert-failed" class="alert alert-danger" style="display: none;">
+					<div id="alert-failed" class="alert alert-danger no-display">
 						<strong>Oeps!</strong> Controleer of alle velden zijn ingevuld.
 					</div>
 					<div class="row">

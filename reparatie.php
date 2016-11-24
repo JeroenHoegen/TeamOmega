@@ -65,8 +65,13 @@
 								window.location = window.location;
 							}
 							$('#statusupdates table').append('<tr id="'+response.id+'"><td>'+response.username+'</td><td>'+response.date+'</td><td>'+response.time+'</td><td>'+response.statusupdate+'</td><td><a class="removeStatus" id="'+response.id+'"><i class="fa fa-trash-o fa-lg"></i></a></td></tr>');
+							$('#statusupdate').val('');
+						} else if(response.statusupdate != null) {
+							$('#alert-success').fadeIn(500).delay(1000).fadeOut(500); 
+							$('#statusupdates table').append('<tr id="'+response.id+'"><td>'+response.username+'</td><td>'+response.date+'</td><td>'+response.time+'</td><td>'+response.statusupdate+'</td><td><a class="removeStatus" id="'+response.id+'"><i class="fa fa-trash-o fa-lg"></i></a></td></tr>');
+							$('#statusupdate').val('');
 						} else {
-							$('#alert-failed').fadeIn(500).delay(1000).fadeOut(500);  
+							$('#alert-failed').fadeIn(500).delay(1000).fadeOut(500);
 						}
                     },
                     error: function() {
@@ -176,10 +181,10 @@
 				</div>
 				<?php } ?>
             </div>
-			<div id="alert-failed" class="alert alert-danger" style="display: none;">
+			<div id="alert-failed" class="alert alert-danger no-display">
 				<strong>Oeps!</strong> Controleer of alle velden zijn ingevuld.
 			</div>
-			<div id="alert-success" class="alert alert-success" style="display: none;">
+			<div id="alert-success" class="alert alert-success no-display">
 				<strong><i class="fa fa-thumbs-up fa-lg"></i></strong> De gegevens zijn met succes gewijzigd.
 			</div>
 			<div class="row">
@@ -196,7 +201,7 @@
 									<input type="hidden" name="action" value="updateReparatie">
 									<input type="hidden" name="id" value="<?php echo filterData($reparatieData[0]['id']); ?>">
 									<input type="hidden" name="customerid" value="<?php echo filterData($_GET['returnid']); ?>">
-									<input type="hidden" name="status" value="<?php echo filterData($reparatieData[0]['status']); ?>">
+									<input type="hidden" name="status" value="<?php echo filterData($reparatieData[0]['status'], true); ?>">
 									<div class="col-lg-12">
 										<div class="form-group">
 											<label>Status:</label>
@@ -219,7 +224,7 @@
 											<label>Omschrijving</label>
 											<textarea class="form-control" rows="5" name="omschrijving" placeholder="Omschrijving" tabindex="4" required <?php if($reparatieData[0]['status'] == 2) {echo ' disabled';} ?>><?php echo filterData($reparatieData[0]['omschrijving']); ?></textarea>
 										</div>
-										<div class="form-group" <?php if($reparatieData[0]['emailverstuurd'] == 0) { ?>style="display: none;" <?php } ?> id="emailversturen">
+										<div class="form-group" <?php if($reparatieData[0]['emailverstuurd'] == 0) { ?> <?php } ?> id="emailversturen">
 											<label>E-mail versturen naar klant:</label>
 											<select class="form-control" name="emailversturen" tabindex="6" <?php if($reparatieData[0]['emailverstuurd'] != 0 || $reparatieData[0]['status'] == 2) {echo ' disabled';} ?>>
 												<option value="0" <?php if($reparatieData[0]['emailverstuurd'] == 0) {echo ' selected';} ?>>nee</option>

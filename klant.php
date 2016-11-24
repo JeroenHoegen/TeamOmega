@@ -157,10 +157,10 @@
 				</div>
 				<?php } ?>
             </div>
-			<div id="alert-failed" class="alert alert-danger" style="display: none;">
+			<div id="alert-failed" class="alert alert-danger no-display">
 				<strong>Oeps!</strong> Controleer of alle velden zijn ingevuld.
 			</div>
-			<div id="alert-success" class="alert alert-success" style="display: none;">
+			<div id="alert-success" class="alert alert-success no-display">
 				<strong><i class="fa fa-thumbs-up fa-lg"></i></strong> De gegevens zijn met succes gewijzigd.
 			</div>
 			<div class="row">
@@ -275,7 +275,7 @@
 					<h4 class="modal-title">Nieuwe reparatie</h4>
 				</div>
 				<div class="modal-body">
-					<div id="alert-failed" class="alert alert-danger" style="display: none;">
+					<div id="alert-failed" class="alert alert-danger no-display">
 						<strong>Oeps!</strong> Controleer of alle velden zijn ingevuld.
 					</div>
 					<div class="row">

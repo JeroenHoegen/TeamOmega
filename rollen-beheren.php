@@ -52,7 +52,6 @@
                     success: function(response) {
 						if(response.success) {					
 							$('#alert-success').fadeIn(500).delay(1000).fadeOut(500);
-							$('input').val('');
 						} else {
 							$('#alert-failed-2').fadeIn(500).delay(1000).fadeOut(500);  
 						}
@@ -106,10 +105,10 @@
                     <h1>Rollen beheren</h1>
                 </div>
             </div>
-			<div id="alert-failed" class="alert alert-danger" style="display: none;">
+			<div id="alert-failed" class="alert alert-danger no-display">
 				<strong>Oeps!</strong> Er is iets mis gegaan, probeer het nog eens.
 			</div>
-			<div id="alert-success" class="alert alert-success" style="display: none;">
+			<div id="alert-success" class="alert alert-success no-display">
 				<strong><i class="fa fa-thumbs-up fa-lg"></i></strong> De gegevens zijn met succes gewijzigd.
 			</div>
 			<div class="row">

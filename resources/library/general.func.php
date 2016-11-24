@@ -70,8 +70,8 @@
 	}
 	
 	//This functions removes special characters in order to prevent XSS
-	function filterData($data) {
-		return (empty($data)) ? '-' : htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+	function filterData($data, $status=false) {
+		return (empty($data) && !$status) ? '-' : htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
 	}
 	
 	//Get the customer data by id returns array on success

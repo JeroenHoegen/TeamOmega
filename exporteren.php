@@ -27,31 +27,6 @@
 
     <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-	
-	<script>
-		/*$(document).ready(function() {
-			$('#exportForm').on('submit', function(event) {
-				event.preventDefault();
-                $.ajax({
-                    url: 'resources/export.ajax.php',
-                    type: 'post',
-                    data: $(this).serialize(),
-                    dataType: 'json',
-                    success: function(response) {
-						console.log(response);
-						if(response.success) {
-							console.log(response);
-						} else {
-							alert('Er is een fout opgetreden!');
-						}
-                    },
-                    error: function() {
-                        alert('Er is een fout opgetreden!');
-                    }
-                });
-			});
-		});*/
-	</script>
 </head>
 <body>
     <div id="wrapper">
