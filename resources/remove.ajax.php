@@ -17,7 +17,7 @@
 			//First check if the user has authority
 			checkAuthority('klantverwijderen');
 			
-			$query = $connection->prepare('delete from klant where id=:id');
+			$query = $connection->prepare('update klant set inactief=1 where id=:id');
 			$query->bindParam(':id', $_POST['id']);
 				
 			$query->execute();
