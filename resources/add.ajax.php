@@ -53,7 +53,7 @@
 			$reparatieid = $connection->lastInsertId();
 				
 			//Store the time (hour:minute) to use it in the status updates
-			$time = date('h:m');
+			$time = date('h:i');
 			
 			//Add status to reparatie
 			addStatusToReparatie($reparatieid, $_POST['medewerker'], $_POST['startdatum'], $time, 'Reparatie toegevoegd', '0');	
@@ -73,9 +73,9 @@
 		
 			//Convert the password to a md5 hash, since bindParam
 			//only accepts one variable
-			$password = md5($_POST['wachtwoord']);
+			$password = hash('sha256', $_POST['wachtwoord']);
 			
-			$query = $connection->prepare("insert into gebruiker values (:gebruikersnaam, :wachtwoord, :rol, :voornaam, :achternaam)");
+			$query = $connection->prepare("insert into gebruiker values (:gebruikersnaam, :wachtwoord, :rol, :voornaam, :achternaam, 0)");
 			$query->bindParam(':gebruikersnaam', $_POST['gebruikersnaam']);
 			$query->bindParam(':wachtwoord', $password);
 			$query->bindParam(':rol', $_POST['rol']);

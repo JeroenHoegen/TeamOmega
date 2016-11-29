@@ -62,7 +62,22 @@
 			//First check if the user has authority
 			checkAuthority('accountsbeheren');
 			
-			$query = $connection->prepare('delete from gebruiker where gebruikersnaam=:gebruikersnaam');
+			$query = $connection->prepare('update gebruiker set inactief=1 where gebruikersnaam=:gebruikersnaam');
+			$query->bindParam(':gebruikersnaam', $_POST['gebruikersnaam']);
+				
+			$query->execute();
+				
+			//If insert statement succeed
+			if($query->rowCount()) {
+				$response['success'] = true;
+			} else {
+				$response['success'] = false;
+			}
+		} else if($_POST['action'] == 'removePassword') {
+			//First check if the user has authority
+			checkAuthority('accountsbeheren');
+			
+			$query = $connection->prepare('update gebruiker set wachtwoord="dc00c903852bb19eb250aeba05e534a6d211629d77d055033806b783bae09937" where gebruikersnaam=:gebruikersnaam');
 			$query->bindParam(':gebruikersnaam', $_POST['gebruikersnaam']);
 				
 			$query->execute();
