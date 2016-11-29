@@ -91,12 +91,12 @@
 	
 	//This function adds a new status to a reparatie
 	//Returns the status id on success, false on failure
-	function addStatusToReparatie($reparatieid, $medewerker, $datum, $tijd, $omschrijving, $verwijderen) {
+	function addStatusToReparatie($reparatieid, $datum, $tijd, $omschrijving, $verwijderen) {
 		$connection = getConnection();
 		
 		$queryUpdates = $connection->prepare("insert into updates values (null, :reparatieid, :medewerker, :datum, :tijd, :omschrijving, :verwijderen)");
 		$queryUpdates->bindParam(':reparatieid', $reparatieid);
-		$queryUpdates->bindParam(':medewerker', $medewerker);
+		$queryUpdates->bindParam(':medewerker', getUserData()['username']);
 		$queryUpdates->bindParam(':datum', $datum);
 		$queryUpdates->bindParam(':tijd', $tijd);
 		$queryUpdates->bindParam(':omschrijving', $omschrijving);

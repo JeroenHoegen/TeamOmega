@@ -56,7 +56,7 @@
 			$time = date('h:i');
 			
 			//Add status to reparatie
-			addStatusToReparatie($reparatieid, $_POST['medewerker'], $_POST['startdatum'], $time, 'Reparatie toegevoegd', '0');	
+			addStatusToReparatie($reparatieid, $_POST['startdatum'], $time, 'Reparatie toegevoegd', '0');	
 			
 			//If insert statement succeed
 			if($query->rowCount()) {
