@@ -78,7 +78,7 @@
 	//and false on failure.
 	function getCustomerDataById($id) {
 		$connection = getConnection();
-		$query = $connection->prepare('select * from klant where id=:id');
+		$query = $connection->prepare('select * from klant where id=:id and inactief=0');
 		$query->bindParam(':id', $id);
 		$query->execute();
 		

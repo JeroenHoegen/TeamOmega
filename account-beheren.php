@@ -18,7 +18,7 @@
 	//returns array $userDataByUsername on success, returns to accounts.php
 	//on failure
 	if(isset($_GET['gebruikersnaam'])) {
-		$query = $connection->prepare('select * from gebruiker where gebruikersnaam=:gebruikersnaam');
+		$query = $connection->prepare('select * from gebruiker where gebruikersnaam=:gebruikersnaam and inactief=0');
 		$query->bindParam(':gebruikersnaam', $_GET['gebruikersnaam']);
 		$query->execute();
 		
@@ -58,7 +58,6 @@
                     dataType: 'json',
                     success: function(response) {
 						if(response.success) {
-							$('html, body').animate({ scrollTop: 0 }, 'fast');
 							$('#alert-success').fadeIn(500).delay(1000).fadeOut(500);
 						} else {
 							$('#alert-failed').fadeIn(500).delay(1000).fadeOut(500);  
@@ -69,6 +68,28 @@
                     }
                 });
             });
+
+			$('#resetPassword').click(function() {
+				if(confirm('Weet u zeker dat u het wachtwoord van deze gebruiker wil resetten naar "wachtwoord"?')) {
+					event.preventDefault();    
+					$.ajax({
+						url: 'resources/remove.ajax.php',
+						type: 'post',
+						data: 'action=removePassword&gebruikersnaam=<?php echo filterData($userDataByUsername[0]['gebruikersnaam']); ?>',
+						dataType: 'json',
+						success: function(response) {
+							if(response.success) {					
+							$('#alert-success-password').fadeIn(500).delay(1000).fadeOut(500);
+							} else {
+								alert('Kan het wachtwoord niet resetten, mogelijk is het wachtwoord al "wachtwoord".');  
+							}
+						},
+						error: function() {
+							alert('Er is een fout opgetreden!');
+						}
+					});
+				}
+			});
 			
 			$('#removeUser').click(function() {
 				if(confirm('Weet u zeker dat u deze gebruiker wil verwijderen?')) {
@@ -135,6 +156,7 @@
                     <h1 id="naam">Gebruiker - <?php echo $userDataByUsername[0]['gebruikersnaam'] ?></h1>
                 </div>
 				<div class="col-lg-4 text-right top-btn">
+					<a class="btn btn-danger" id="resetPassword">Reset wachtwoord</a>
 					<a class="btn btn-danger" id="removeUser">Verwijderen</a>
 				</div>
             </div>
@@ -143,6 +165,9 @@
 			</div>
 			<div id="alert-success" class="alert alert-success no-display">
 				<strong><i class="fa fa-thumbs-up fa-lg"></i></strong> De gegevens zijn met succes gewijzigd.
+			</div>
+			<div id="alert-success-password" class="alert alert-success no-display">
+				<strong><i class="fa fa-thumbs-up fa-lg"></i></strong> Het wachtwoord is gereset naar "wachtwoord".
 			</div>
 			<div class="row">
 				<div class="col-lg-12">

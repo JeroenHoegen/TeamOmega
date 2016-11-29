@@ -279,7 +279,7 @@
 														echo '<td>'.filterData($row['datum']).'</td>';													
 														echo '<td>'.filterData($row['tijd']).'</td>';													
 														echo '<td>'.filterData($row['omschrijving']).'</td>';													
-														if(filterData($row['verwijderbaar']) == 1 && $userData['role'] < getAuthorityLevel('overzichtbekijken') && $reparatieData[0]['status'] != 2) {
+														if(filterData($row['verwijderbaar']) == 1 && $row['medewerker'] == $userData['username'] && $reparatieData[0]['status'] != 2) {
 															echo '<td><a class="removeStatus" id="'.filterData($row['id']).'"><i class="fa fa-trash-o fa-lg"></i></a></td>';							
 														} else {
 															echo '<td></td>';

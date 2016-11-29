@@ -17,9 +17,9 @@
 		}
         
         $username = $_POST['username'];
-        $password = md5($_POST['password']);
+        $password = hash('sha256', $_POST['password']);
         
-		$query = $connection->prepare('select * from gebruiker where gebruikersnaam=:username and wachtwoord=:password');
+		$query = $connection->prepare('select * from gebruiker where gebruikersnaam=:username and wachtwoord=:password and inactief=0');
 		$userData = array();
 			
 		$query->bindParam(':username', $username);

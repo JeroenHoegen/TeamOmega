@@ -230,6 +230,7 @@
 											<tr>
 												<th>Ingevoerd door</th>
 												<th>Datum invoering</th>
+												<th>Serienummer</th>
 												<th>Omschrijving</th>
 												<th>Garantie</th>
 												<th>Kosten</th>
@@ -246,6 +247,7 @@
 														echo '<tr>';
 														echo '<td>'.filterData($row['medewerker']).'</td>';
 														echo '<td>'.filterData($row['startdatum']).'</td>';
+														echo '<td>'.filterData($row['serienummer']).'</td>';
 														echo '<td>'.substr(filterData($row['omschrijving']), 0, 30).'...'.'</td>';
 														echo '<td>'.filterData($row['garantie']).'</td>';
 														echo '<td>'.filterData($row['kosten']).'</td>';

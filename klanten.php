@@ -138,7 +138,7 @@
 						</thead>
 						<tbody>
 							<?php 
-								$query = $connection->prepare('select * from klant');
+								$query = $connection->prepare('select * from klant where inactief=0');
 								$query->execute();
 								if($query->rowCount()) {
 									while($row = $query->fetch()) {

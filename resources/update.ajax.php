@@ -73,11 +73,11 @@
 				//If the status changes we also need to add an update to the reparatie status
 				if($_POST['status'] != $_POST['newstatus']) {
 					if($_POST['newstatus'] == 0) {
-						addStatusToReparatie($_POST['id'], getUserData()['username'], date('d-m-Y'), date('h:m'), 'Status: Open', 0);
+						addStatusToReparatie($_POST['id'], getUserData()['username'], date('d-m-Y'), date('h:i'), 'Status: Open', 0);
 					} else if($_POST['newstatus'] == 1) {
-						addStatusToReparatie($_POST['id'], getUserData()['username'], date('d-m-Y'), date('h:m'), 'Status: Wordt aan gewerkt', 0);
+						addStatusToReparatie($_POST['id'], getUserData()['username'], date('d-m-Y'), date('h:i'), 'Status: Wordt aan gewerkt', 0);
 					} else if($_POST['newstatus'] == 2) {
-						addStatusToReparatie($_POST['id'], getUserData()['username'], date('d-m-Y'), date('h:m'), 'Status: Afgerond', 0);
+						addStatusToReparatie($_POST['id'], getUserData()['username'], date('d-m-Y'), date('h:i'), 'Status: Afgerond', 0);
 					}
 					$response['newstatus'] = $_POST['newstatus'];
 				}
@@ -90,13 +90,13 @@
 			//Here we check if the user added information to the 'statusupdate' field
 			//if so we need to add a custom status to the reparatie status.
 			if(trim($_POST['statusupdate']) != '') {
-				$statusSuccess = addStatusToReparatie($_POST['id'], getUserData()['username'], date('d-m-Y'), date('h:m'), $_POST['statusupdate'], 1);
+				$statusSuccess = addStatusToReparatie($_POST['id'], getUserData()['username'], date('d-m-Y'), date('h:i'), $_POST['statusupdate'], 1);
 				if($statusSuccess != false) {
 					//If addStatusToReparatie succeeds send back the data to the client
 					$response['id'] = $statusSuccess;
 					$response['username'] = getUserData()['username'];
 					$response['date'] = date('d-m-Y');
-					$response['time'] = date('h:m');
+					$response['time'] = date('h:i');
 					$response['statusupdate'] = filterData($_POST['statusupdate']);
 				}
 			}
@@ -107,8 +107,8 @@
 			//Check if the provided password match
 			if($_POST['nieuwwachtwoord'] == $_POST['bevestigwachtwoord']) {
 				//bindParam only accepts variables so we declare them below
-				$wachtwoord = md5($_POST['huidigwachtwoord']);
-				$nieuwwachtwoord = md5($_POST['nieuwwachtwoord']);
+				$wachtwoord = hash('sha256', $_POST['huidigwachtwoord']);
+				$nieuwwachtwoord = hash('sha256', $_POST['nieuwwachtwoord']);
 				
 				$query = $connection->prepare('update gebruiker set wachtwoord=:nieuwwachtwoord where gebruikersnaam=:gebruikersnaam and wachtwoord=:wachtwoord'); 
 				$query->bindParam(':gebruikersnaam', getUserData()['username']);
