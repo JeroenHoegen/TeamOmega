@@ -12,7 +12,7 @@
 	$userData = getUserData();
 	
 	//Store the number of unread messages otherwise
-	//we have to make to much sql calls.
+	//we have to make too much sql calls.
 	$numberUnreadMessages = getNumberUnreadMessages($userData['username']);
 	
 	//Assign the connection to a local connection variable
