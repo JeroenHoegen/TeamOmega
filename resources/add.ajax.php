@@ -42,7 +42,7 @@
 			
 			$query = $connection->prepare("insert into reparatie values(null, :klantid, :medewerker, :serienummer, :startdatum, :omschrijving, null, null, 0, 0)"); 
 			$query->bindParam(':klantid', $_POST['id']);
-			$query->bindParam(':medewerker', $_POST['medewerker']);
+			$query->bindParam(':medewerker', getUserData()['username']);
 			$query->bindParam(':serienummer', $_POST['serienummer']);
 			$query->bindParam(':startdatum', $_POST['startdatum']);
 			$query->bindParam(':omschrijving', $_POST['omschrijving']);
@@ -56,7 +56,7 @@
 			$time = date('h:i');
 			
 			//Add status to reparatie
-			addStatusToReparatie($reparatieid, $_POST['medewerker'], $_POST['startdatum'], $time, 'Reparatie toegevoegd', '0');	
+			addStatusToReparatie($reparatieid, $_POST['startdatum'], $time, 'Reparatie toegevoegd', '0');	
 			
 			//If insert statement succeed
 			if($query->rowCount()) {
@@ -90,6 +90,32 @@
 			} else {
 				$response['success'] = false;
 			}
+		} else if($_POST['action'] == 'sendMessage') {
+			//First check if the user has authority
+			checkAuthority('berichtversturen');
+			
+			//Store the date and time (hour:minute), otherwise it throws an error
+			//regarding pdo 'passed by reference'.
+			$date = date('d-m-Y');
+			$time = date('h:i');
+
+			$query = $connection->prepare('insert into bericht values(null, :van, :naar, :datum, :tijd, :bericht, 0)');
+			$query->bindParam(':van', getUserData()['username']);
+			$query->bindParam(':naar', $_POST['naar']);
+			$query->bindParam(':datum', $date);
+			$query->bindParam(':tijd', $time);
+			$query->bindParam(':bericht', $_POST['bericht']);
+			
+			$query->execute();
+				
+			//If insert statement succeed
+			if($query->rowCount()) {
+				$response['success'] = true;
+			} else {
+				$response['success'] = false;
+			}
+		} else {
+			$response['success'] = false;
 		}
 	} else {
 			$response['success'] = false;

@@ -11,6 +11,10 @@
 	//Set all the userdata to an array
 	$userData = getUserData();
 	
+	//Store the number of unread messages otherwise
+	//we have to make to much sql calls.
+	$numberUnreadMessages = getNumberUnreadMessages($userData['username']);
+	
 	//Assign the connection to a local connection variable
 	$connection = getConnection();
 ?>
@@ -52,8 +56,10 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">
                      <li class="dropdown user-dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo filterData($userData['username']); ?><b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <?php echo filterData($userData['username']); ?> <?php echo ($numberUnreadMessages > 0) ? '<span class="badge">'.$numberUnreadMessages.'</span>' : '' ?><b class="caret"></b></a>
                         <ul class="dropdown-menu">
+                            <li><a href="berichten.php"><i class="fa fa-envelope"></i> Berichten <?php echo ($numberUnreadMessages > 0) ? '<span class="badge">'.$numberUnreadMessages.'</span>' : '' ?></a></li>
+							<li class="divider"></li>
                             <li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
                             <li class="divider"></li>
                             <li><a href="logout.php"><i class="fa fa-power-off"></i> Uitloggen</a></li>

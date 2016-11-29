@@ -74,6 +74,23 @@
 		return (empty($data) && !$status) ? '-' : htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
 	}
 	
+	//This functions returns the number of unread messages
+	//We use this for the little badge in the right top if
+	//there are unread messages. Returns the number on success
+	//and 0 on failure.
+	function getNumberUnreadMessages($username) {
+		$connection = getConnection();
+		$query = $connection->prepare('select id from bericht where naar=:gebruikersnaam and gelezen=0');
+		$query->bindParam(':gebruikersnaam', $username);
+		$query->execute();
+		
+		if($query->rowCount() > 0) {
+			return $query->rowCount();
+		} else {
+			return 0;
+		}
+	}
+	
 	//Get the customer data by id returns array on success
 	//and false on failure.
 	function getCustomerDataById($id) {
@@ -91,12 +108,12 @@
 	
 	//This function adds a new status to a reparatie
 	//Returns the status id on success, false on failure
-	function addStatusToReparatie($reparatieid, $medewerker, $datum, $tijd, $omschrijving, $verwijderen) {
+	function addStatusToReparatie($reparatieid, $datum, $tijd, $omschrijving, $verwijderen) {
 		$connection = getConnection();
 		
 		$queryUpdates = $connection->prepare("insert into updates values (null, :reparatieid, :medewerker, :datum, :tijd, :omschrijving, :verwijderen)");
 		$queryUpdates->bindParam(':reparatieid', $reparatieid);
-		$queryUpdates->bindParam(':medewerker', $medewerker);
+		$queryUpdates->bindParam(':medewerker', getUserData()['username']);
 		$queryUpdates->bindParam(':datum', $datum);
 		$queryUpdates->bindParam(':tijd', $tijd);
 		$queryUpdates->bindParam(':omschrijving', $omschrijving);

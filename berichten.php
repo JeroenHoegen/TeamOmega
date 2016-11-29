@@ -6,7 +6,7 @@
 	checkLogin();
 	
 	//First check if the user has authority
-	checkAuthority('accountsbeheren');
+	checkAuthority('overzichtbekijken');
 	
 	//Set all the userdata to an array
 	$userData = getUserData();
@@ -17,13 +17,21 @@
 	
 	//Assign the connection to a local connection variable
 	$connection = getConnection();
+	
+	//If there are unread messages set 'gelezen=1' on these messages
+	//so the badge disappears.
+	if($numberUnreadMessages > 0) {
+		$queryMessages = $connection->prepare('update bericht set gelezen=1 where naar=:gebruikersnaam and gelezen=0');
+		$queryMessages->bindParam(':gebruikersnaam', $userData['username']);
+		$queryMessages->execute();
+	}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Euro Discount - Accounts beheren</title>
+    <title>Euro Discount - Berichten</title>
 
     <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css" />
@@ -34,23 +42,7 @@
 	
 	<script>
 		$(document).ready(function() {
-			$('#searchInput').keyup(function() {
-				var value = this.value.toLowerCase().trim();
-
-				$('table').find("tr").each(function(index) {
-					if (index === 0) return;
-
-					var tdCheck = false;
-					$(this).find('td').each(function () {
-						tdCheck = tdCheck || $(this).text().toLowerCase().trim().indexOf(value) !== -1;
-					});
-
-					$(this).toggle(tdCheck);
-
-				});
-			});
-			
-			$('#addUserForm').on('submit', function(event) {
+			$('#sendMessageForm').on('submit', function(event) {
                 event.preventDefault();    
                 $.ajax({
                     url: 'resources/add.ajax.php',
@@ -59,15 +51,38 @@
                     dataType: 'json',
                     success: function(response) {
 						if(response.success) {
-							window.location = 'accounts.php';
+							$('#alert-success').fadeIn(500);
 						} else {
-							$('#alert-failed').fadeIn(500); 
+							$('#alert-failed').fadeIn(500).delay(500).fadeOut(500); 
 						}
                     },
                     error: function() {
                         alert('Er is een fout opgetreden!');
                     }
                 });
+			});
+			
+			$('#messagetable').on('click', '.removeMessage', function() {
+				var messageId = $(this).attr('id');
+				if(confirm('Weet u zeker dat u dit bericht wil verwijderen?')) {
+					event.preventDefault();    
+					$.ajax({
+						url: 'resources/remove.ajax.php',
+						type: 'post',
+						data: 'action=removeMessage&id='+messageId,
+						dataType: 'json',
+						success: function(response) {
+							if(response.success) {		
+								$('tr#'+messageId).remove();
+							} else {
+								alert('Kan het bericht niet verwijderen, probeer het nog eens.');  
+							}
+						},
+						error: function() {
+							alert('Er is een fout opgetreden!');
+						}
+					});
+				}
 			});
 		});
 	</script>
@@ -111,45 +126,46 @@
 
         <div id="page-wrapper">
             <div class="row">
-                <div class="col-lg-8">
-                    <h1>Overzicht gebruikers</h1>
+                <div class="col-lg-12">
+                    <h1>Overzicht berichten</h1>
                 </div>
-				<div class="col-lg-4 User-search">
-					<input type="text" class="form-control" id="searchInput" placeholder="Zoek gebruiker" />
-				</div>
             </div>
 			<div class="row">
 				<div class="col-lg-12">
-					<a class="btn btn-primary" data-toggle="modal" data-target="#addUserModal">Nieuwe gebruiker</a>
+					<?php if($userData['role'] <= getAuthorityLevel('berichtversturen')) { ?>
+					<a class="btn btn-primary" data-toggle="modal" data-target="#addMessageModal">Nieuw bericht</a>
+					<?php } ?>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-lg-12">
-					<table class="table table-striped">
+					<table id="messagetable" class="table table-striped">
 						<thead>
 							<tr>
-								<th>Gebruikersnaam</th>
-								<th>Voornaam</th>
-								<th>Achternaam</th>
-								<th>Rol</th>
+								<th>Van</th>
+								<th>Datum</th>
+								<th>Tijd</th>
+								<th>Bericht</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php 
-								$query = $connection->prepare('select g.gebruikersnaam, g.voornaam, g.achternaam, r.naam from gebruiker g join rol r on g.rol=r.id where g.inactief=0 order by g.rol');
+								$query = $connection->prepare('select g.voornaam, g.achternaam, b.id, b.datum, b.tijd, b.bericht from gebruiker g join bericht b on b.van=g.gebruikersnaam where b.naar=:gebruikersnaam order by b.datum, b.tijd desc');
+								$query->bindParam(':gebruikersnaam', $userData['username']);
 								$query->execute();
 								if($query->rowCount()) {
 									while($row = $query->fetch()) {
-										echo '<tr>';
-										echo '<td>'.filterData($row['gebruikersnaam']).'</td>';
-										echo '<td>'.filterData($row['voornaam']).'</td>';
-										echo '<td>'.filterData($row['achternaam']).'</td>';
-										echo '<td>'.filterData($row['naam']).'</td>';
-										echo '<td><a href="account-beheren.php?gebruikersnaam='.$row['gebruikersnaam'].'"><i class="fa fa-pencil-square-o fa-lg"></i></a></td>';
+										echo '<tr id="'.filterData($row['id']).'">';
+										echo '<td>'.filterData($row['voornaam']).' '.filterData($row['achternaam']).'</td>';
+										echo '<td>'.filterData($row['datum']).'</td>';
+										echo '<td>'.filterData($row['tijd']).'</td>';
+										echo '<td>'.filterData($row['bericht']).'</td>';
+										echo '<td><a class="removeMessage" id="'.filterData($row['id']).'"><i class="fa fa-trash-o fa-lg"></i></a></td>';
 										echo '</tr>';
 									}
 								} else {
-									echo '<tr><td>Er zijn geen gebruikeren gevonden.</td></tr>';
+									echo '<tr><td>Er zijn geen berichten gevonden.</td></tr>';
 								}
 							?>
 						</tbody>
@@ -159,50 +175,49 @@
         </div>
     </div>
     <!-- /#wrapper -->
-	<div id="addUserModal" class="modal fade" role="dialog">
+	<div id="addMessageModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Nieuwe gebruiker</h4>
+					<h4 class="modal-title">Nieuw bericht</h4>
 				</div>
 				<div class="modal-body">
 					<div id="alert-failed" class="alert alert-danger no-display">
-						<strong>Oeps!</strong> Controleer of de gebruikersnaam uniek is
+						<strong>Oeps!</strong> Controleer of alles is ingevuld
+					</div>
+					<div id="alert-success" class="alert alert-success no-display">
+						<strong><i class="fa fa-thumbs-up fa-lg"></i></strong> Bericht verstuurd! U kunt dit venster sluiten.
 					</div>
 					<div class="row">
-						<form id="addUserForm">
-							<input type="hidden" name="action" value="addUser">
-							<div class="col-lg-6">
+						<form id="sendMessageForm">
+							<input type="hidden" name="action" value="sendMessage">
+							<div class="col-lg-12">
 								<div class="form-group">
-									<label>Gebruikersnaam</label>
-									<input type="text" class="form-control" name="gebruikersnaam" placeholder="Gebruikersnaam" tabindex="1" required>
-								</div>
-								<div class="form-group">
-									<label>Voornaam</label>
-									<input type="text" class="form-control" name="voornaam" placeholder="Voornaam" tabindex="3" required>
-								</div>
-								<div class="form-group">
-									<label>Rol</label>
-										<select class="form-control" name="rol" id="rol" tabindex="5">
-											<option value="3">Stagair</option>
-											<option value="2">Medewerker</option>
-											<option value="1">Beheerder</option>
+									<label>Naar</label>
+										<select class="form-control" name="naar" tabindex="1">
+											<?php
+												//Get all the active users from the database loggedin account
+												//excluded.
+												$userQuery = $connection->prepare('select gebruikersnaam, voornaam, achternaam from gebruiker where inactief=0 and gebruikersnaam!=:gebruikersnaam');
+												$userQuery->bindParam(':gebruikersnaam', $userData['username']);
+												$userQuery->execute();
+												
+												while($row = $userQuery->fetch()) {
+													echo '<option value="'.$row['gebruikersnaam'].'">'.$row['voornaam'].' '.$row['achternaam'].'</option>';
+												}
+											?>
 										</select>
 									</div>
 							</div>
-							<div class="col-lg-6">
+							<div class="col-lg-12">
 								<div class="form-group">
-									<label>Wachtwoord</label>
-									<input type="password" class="form-control" name="wachtwoord" placeholder="Wachtwoord" tabindex="2" required>
-								</div>
-								<div class="form-group">
-									<label>Achternaam</label>
-									<input type="text" class="form-control" name="achternaam" placeholder="Achternaam" tabindex="4" required>
+									<label>Bericht</label>
+									<textarea class="form-control" rows="5" name="bericht" placeholder="Bericht" tabindex="2" required></textarea>
 								</div>
 							</div>
 							<div class="col-lg-12">
-								<button type="submit" class="btn btn-primary">Toevoegen</button>
+								<button type="submit" class="btn btn-primary">Versturen</button>
 							</div>
 						</form>
 					</div>

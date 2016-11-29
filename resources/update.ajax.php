@@ -73,11 +73,11 @@
 				//If the status changes we also need to add an update to the reparatie status
 				if($_POST['status'] != $_POST['newstatus']) {
 					if($_POST['newstatus'] == 0) {
-						addStatusToReparatie($_POST['id'], getUserData()['username'], date('d-m-Y'), date('h:i'), 'Status: Open', 0);
+						addStatusToReparatie($_POST['id'], date('d-m-Y'), date('h:i'), 'Status: Open', 0);
 					} else if($_POST['newstatus'] == 1) {
-						addStatusToReparatie($_POST['id'], getUserData()['username'], date('d-m-Y'), date('h:i'), 'Status: Wordt aan gewerkt', 0);
+						addStatusToReparatie($_POST['id'], date('d-m-Y'), date('h:i'), 'Status: Wordt aan gewerkt', 0);
 					} else if($_POST['newstatus'] == 2) {
-						addStatusToReparatie($_POST['id'], getUserData()['username'], date('d-m-Y'), date('h:i'), 'Status: Afgerond', 0);
+						addStatusToReparatie($_POST['id'], date('d-m-Y'), date('h:i'), 'Status: Afgerond', 0);
 					}
 					$response['newstatus'] = $_POST['newstatus'];
 				}
@@ -90,7 +90,7 @@
 			//Here we check if the user added information to the 'statusupdate' field
 			//if so we need to add a custom status to the reparatie status.
 			if(trim($_POST['statusupdate']) != '') {
-				$statusSuccess = addStatusToReparatie($_POST['id'], getUserData()['username'], date('d-m-Y'), date('h:i'), $_POST['statusupdate'], 1);
+				$statusSuccess = addStatusToReparatie($_POST['id'], date('d-m-Y'), date('h:i'), $_POST['statusupdate'], 1);
 				if($statusSuccess != false) {
 					//If addStatusToReparatie succeeds send back the data to the client
 					$response['id'] = $statusSuccess;
@@ -161,6 +161,7 @@
 										   when "reparatieverwijderen" then :reparatieverwijderen
 										   when "accountsbeheren" then :accountsbeheren
 										   when "wachtwoordwijzigen" then :wachtwoordwijzigen
+										   when "berichtversturen" then :berichtversturen
 										   end');
 			$query->bindParam(':klanttoevoegen', $_POST['klanttoevoegen']);
 			$query->bindParam(':klantbewerken', $_POST['klantbewerken']);
@@ -171,6 +172,7 @@
 			$query->bindParam(':reparatieverwijderen', $_POST['reparatieverwijderen']);
 			$query->bindParam(':accountsbeheren', $_POST['accountsbeheren']);
 			$query->bindParam(':wachtwoordwijzigen', $_POST['wachtwoordwijzigen']);
+			$query->bindParam(':berichtversturen', $_POST['berichtversturen']);
 				
 			$query->execute();
 				

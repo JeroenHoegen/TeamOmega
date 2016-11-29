@@ -58,6 +58,21 @@
 			} else {
 				$response['success'] = false;
 			}
+		} else if($_POST['action'] == 'removeMessage') {
+			//First check if the user has authority
+			checkAuthority('overzichtbekijken');
+			
+			$query = $connection->prepare('delete from bericht where id=:id');
+			$query->bindParam(':id', $_POST['id']);
+				
+			$query->execute();
+				
+			//If insert statement succeed
+			if($query->rowCount()) {
+				$response['success'] = true;
+			} else {
+				$response['success'] = false;
+			}
 		} else if($_POST['action'] == 'removeUser') {
 			//First check if the user has authority
 			checkAuthority('accountsbeheren');
