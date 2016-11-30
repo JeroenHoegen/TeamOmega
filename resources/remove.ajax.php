@@ -47,8 +47,9 @@
 			//First check if the user has authority
 			checkAuthority('overzichtbekijken');
 			
-			$query = $connection->prepare('delete from updates where id=:id');
+			$query = $connection->prepare('delete from updates where id=:id and medewerker=:gebruikersnaam');
 			$query->bindParam(':id', $_POST['id']);
+			$query->bindParam(':gebruikersnaam', getUserData()['username']);
 				
 			$query->execute();
 				
