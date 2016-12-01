@@ -53,7 +53,7 @@
 			$reparatieid = $connection->lastInsertId();
 				
 			//Store the time (hour:minute) to use it in the status updates
-			$time = date('h:i');
+			$time = date('H:i');
 			
 			//Add status to reparatie
 			addStatusToReparatie($reparatieid, $_POST['startdatum'], $time, 'Reparatie toegevoegd', '0');	

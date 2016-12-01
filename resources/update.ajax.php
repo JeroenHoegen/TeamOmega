@@ -73,11 +73,11 @@
 				//If the status changes we also need to add an update to the reparatie status
 				if($_POST['status'] != $_POST['newstatus']) {
 					if($_POST['newstatus'] == 0) {
-						addStatusToReparatie($_POST['id'], date('d-m-Y'), date('h:i'), 'Status: Open', 0);
+						addStatusToReparatie($_POST['id'], date('d-m-Y'), date('H:i'), 'Status: Open', 0);
 					} else if($_POST['newstatus'] == 1) {
-						addStatusToReparatie($_POST['id'], date('d-m-Y'), date('h:i'), 'Status: Wordt aan gewerkt', 0);
+						addStatusToReparatie($_POST['id'], date('d-m-Y'), date('H:i'), 'Status: Wordt aan gewerkt', 0);
 					} else if($_POST['newstatus'] == 2) {
-						addStatusToReparatie($_POST['id'], date('d-m-Y'), date('h:i'), 'Status: Afgerond', 0);
+						addStatusToReparatie($_POST['id'], date('d-m-Y'), date('H:i'), 'Status: Afgerond', 0);
 					}
 					$response['newstatus'] = $_POST['newstatus'];
 				}
@@ -90,13 +90,13 @@
 			//Here we check if the user added information to the 'statusupdate' field
 			//if so we need to add a custom status to the reparatie status.
 			if(trim($_POST['statusupdate']) != '') {
-				$statusSuccess = addStatusToReparatie($_POST['id'], date('d-m-Y'), date('h:i'), $_POST['statusupdate'], 1);
+				$statusSuccess = addStatusToReparatie($_POST['id'], date('d-m-Y'), date('H:i'), $_POST['statusupdate'], 1);
 				if($statusSuccess != false) {
 					//If addStatusToReparatie succeeds send back the data to the client
 					$response['id'] = $statusSuccess;
 					$response['username'] = getUserData()['username'];
 					$response['date'] = date('d-m-Y');
-					$response['time'] = date('h:i');
+					$response['time'] = date('H:i');
 					$response['statusupdate'] = filterData($_POST['statusupdate']);
 				}
 			}
