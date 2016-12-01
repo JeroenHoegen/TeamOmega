@@ -106,6 +106,21 @@
 		}
 	}
 	
+	//Get the supplier data by id returns array on success
+	//and false on failure.
+	function getSupplierDataById($id) {
+		$connection = getConnection();
+		$query = $connection->prepare('select * from leverancier where id=:id and inactief=0');
+		$query->bindParam(':id', $id);
+		$query->execute();
+		
+		if($query->rowCount() > 0) {
+			return $query->fetchAll();
+		} else {
+			return false;
+		}
+	}
+	
 	//This function adds a new status to a reparatie
 	//Returns the status id on success, false on failure
 	function addStatusToReparatie($reparatieid, $datum, $tijd, $omschrijving, $verwijderen) {

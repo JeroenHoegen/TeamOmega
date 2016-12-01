@@ -6,7 +6,7 @@
 	checkLogin();
 	
 	//First check if the user has authority
-	checkAuthority('overzichtbekijken');
+	checkAuthority('leveranciersbeheren');
 	
 	//Set all the userdata to an array
 	$userData = getUserData();
@@ -19,17 +19,17 @@
 	$connection = getConnection();
 	
 	//Get all the information of the customer from the provided id
-	//returns array $customerData on success, returns to klanten.php
+	//returns array $supplierData on success, returns to leverancieren.php
 	//on failure
 	if(isset($_GET['id'])) {
-		$customerData = getCustomerDataById($_GET['id']);
+		$supplierData = getSupplierDataById($_GET['id']);
 		
-		if(!is_array($customerData)) {
-			header('Location: /omega/klanten.php');
+		if(!is_array($supplierData)) {
+			header('Location: /omega/leveranciers.php');
 			die();
 		}
 	} else {
-		header('Location: /omega/klanten.php');
+		header('Location: /omega/leveranciers.php');
 		die();
 	}
 ?>
@@ -38,7 +38,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Euro Discount - Klant</title>
+    <title>Euro Discount - leverancier</title>
 
     <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css" />
@@ -49,10 +49,10 @@
 	
     <script>
         $(document).ready(function() {
-            $('#updateCustomerForm').on('submit', function(event) {
+            $('#updateSupplierForm').on('submit', function(event) {
                 event.preventDefault();    
                 $.ajax({
-                    url: 'resources/update.ajax.php',
+                    url: 'resources/suppliers/update.ajax.php',
                     type: 'post',
                     data: $(this).serialize(),
                     dataType: 'json',
@@ -60,7 +60,7 @@
 						if(response.success) {
 							$('html, body').animate({ scrollTop: 0 }, 'fast');
 							$('#alert-success').fadeIn(500).delay(1000).fadeOut(500);
-							$('h1#naam').text('Klant - '+response.voornaam+' '+response.achternaam);
+							$('h1#naam').text('leverancier - '+response.naam);
 						} else {
 							$('#alert-failed').fadeIn(500).delay(1000).fadeOut(500);  
 						}
@@ -72,18 +72,18 @@
             });
 			
 			$('#removeCustomer').click(function() {
-				if(confirm('Weet u zeker dat u deze klant wil verwijderen?')) {
+				if(confirm('Weet u zeker dat u deze leverancier wil verwijderen?')) {
 					event.preventDefault();    
 					$.ajax({
 						url: 'resources/remove.ajax.php',
 						type: 'post',
-						data: 'action=removeCustomer&id=<?php echo filterData($customerData[0]['id']); ?>',
+						data: 'action=removeCustomer&id=<?php echo filterData($supplierData[0]['id']); ?>',
 						dataType: 'json',
 						success: function(response) {
 							if(response.success) {					
-								window.location = 'klanten.php';
+								window.location = 'leverancieren.php';
 							} else {
-								alert('Kan de klant niet verwijderen, probeer het nog eens.');  
+								alert('Kan de leverancier niet verwijderen, probeer het nog eens.');  
 							}
 						},
 						error: function() {
@@ -129,16 +129,9 @@
             </div>
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
-                    <li><a href="index.php"><i class="fa fa-bullseye"></i> Overzicht</a></li>
-                    <li class="active"><a href="klanten.php"><i class="fa fa-tasks"></i> Klanten</a></li>
-					<li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
-					<?php if($userData['role'] <= getAuthorityLevel('leveranciersbeheren')) { ?>
-					<li><a href="leveranciers.php"><i class="fa fa-truck"></i> Leveranciers</a></li>
-					<?php } ?>
-					<?php if($userData['role'] <= getAuthorityLevel('accountsbeheren')) { ?>
-					<li><a href="accounts.php"><i class="fa fa-id-card"></i> Accounts beheren</a></li>
-					<li><a href="rollen-beheren.php"><i class="fa fa-briefcase"></i> Rollen beheren</a></li>
-					<?php } ?>
+                    <li><a href="index.php"><i class="fa fa-arrow-left"></i> Terug</a></li>
+                    <li class="active"><a href="leveranciers.php"><i class="fa fa-truck"></i> Leveranciers</a></li>
+					<li><a href="categorie.php"><i class="fa fa-tags"></i> Categorieën</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">
                      <li class="dropdown user-dropdown">
@@ -158,9 +151,9 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-8">
-                    <h1 id="naam">Klant - <?php echo filterData($customerData[0]['voornaam']).' '.filterData($customerData[0]['achternaam']); ?></h1>
+                    <h1 id="naam">leverancier - <?php echo filterData($supplierData[0]['naam']); ?></h1>
                 </div>
-				<?php if($userData['role'] <= getAuthorityLevel('klantverwijderen')) { ?>
+				<?php if($userData['role'] <= getAuthorityLevel('leverancierverwijderen')) { ?>
 				<div class="col-lg-4 text-right top-btn">
 					<a class="btn btn-danger" id="removeCustomer">Verwijderen</a>
 				</div>
@@ -175,46 +168,38 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<ul class="nav nav-tabs">
-						<li class="active"><a data-toggle="tab" href="#klantgegevens">Klant gegevens</a></li>
+						<li class="active"><a data-toggle="tab" href="#leveranciergegevens">leverancier gegevens</a></li>
 						<li><a data-toggle="tab" href="#reparaties">Reparaties</a></li>
 					</ul>
 					<div class="tab-content">
-						<div id="klantgegevens" class="tab-pane fade in active">
-							<h3>Klant gegevens</h3>
+						<div id="leveranciergegevens" class="tab-pane fade in active">
+							<h3>leverancier gegevens</h3>
 							<div class="row">
-								<form id="updateCustomerForm">
-									<input type="hidden" name="action" value="updateCustomer">
-									<input type="hidden" name="id" value="<?php echo filterData($customerData[0]['id']); ?>">
+								<form id="updateSupplierForm">
+									<input type="hidden" name="action" value="updateSupplier">
+									<input type="hidden" name="id" value="<?php echo filterData($supplierData[0]['id']); ?>">
 									<div class="col-lg-6">
 										<div class="form-group">
-											<label>Voornaam</label>
-											<input type="text" class="form-control" name="voornaam" placeholder="Voornaam" value="<?php echo filterData($customerData[0]['voornaam']); ?>" tabindex="1" required>
-										</div>
-										<div class="form-group">
-											<label>Adres</label>
-											<input type="text" class="form-control" name="adres" placeholder="Adres" value="<?php echo filterData($customerData[0]['adres']); ?>" tabindex="3" required>
+											<label>Naam</label>
+											<input type="text" class="form-control" name="naam" placeholder="Naam" value="<?php echo filterData($supplierData[0]['naam']); ?>" tabindex="1" required>
 										</div>
 										<div class="form-group">
 											<label>Postcode</label>
-											<input type="text" class="form-control" name="postcode" placeholder="Postcode" value="<?php echo filterData($customerData[0]['postcode']); ?>" tabindex="5" required>
+											<input type="text" class="form-control" name="postcode" placeholder="Postcode" value="<?php echo filterData($supplierData[0]['postcode']); ?>" tabindex="3" required>
 										</div>
 										<div class="form-group">
-											<label>E-mailadres</label>
-											<input type="text" class="form-control" name="email" placeholder="E-mailadres" value="<?php echo filterData($customerData[0]['email']); ?>" tabindex="7" required>
+											<label>Telefoonnummer</label>
+											<input type="text" class="form-control" name="telefoonnummer" placeholder="Telefoonnummer" value="<?php echo filterData($supplierData[0]['telefoonnummer']); ?>" tabindex="5" required>
 										</div>
 									</div>
 									<div class="col-lg-6">
 										<div class="form-group">
-											<label>Achternaam</label>
-											<input type="text" class="form-control" name="achternaam" placeholder="Achternaam" value="<?php echo filterData($customerData[0]['achternaam']); ?>" tabindex="2" required>
+											<label>Adres</label>
+											<input type="text" class="form-control" name="adres" placeholder="Adres" value="<?php echo filterData($supplierData[0]['adres']); ?>" tabindex="2" required>
 										</div>
 										<div class="form-group">
-											<label>Woonplaats</label>
-											<input type="text" class="form-control" name="woonplaats" placeholder="Woonplaats" value="<?php echo filterData($customerData[0]['woonplaats']); ?>" tabindex="4" required>
-										</div>
-										<div class="form-group">
-											<label>Telefoonnummer</label>
-											<input type="text" class="form-control" name="telefoonnummer" placeholder="Telefoonnummer" value="<?php echo filterData($customerData[0]['telefoonnummer']); ?>" tabindex="6" required>
+											<label>Vestigingsplaats</label>
+											<input type="text" class="form-control" name="vestigingsplaats" placeholder="Vestigingsplaats" value="<?php echo filterData($supplierData[0]['vestigingsplaats']); ?>" tabindex="4" required>
 										</div>
 									</div>
 									<div class="col-lg-12">
@@ -247,8 +232,8 @@
 										</thead>
 										<tbody>
 											<?php 
-												$queryReparatie = $connection->prepare('select * from reparatie where klantid=:klantid'); 
-												$queryReparatie->bindParam(':klantid', $customerData[0]['id']);
+												$queryReparatie = $connection->prepare('select * from reparatie where leverancierid=:leverancierid'); 
+												$queryReparatie->bindParam(':leverancierid', $supplierData[0]['id']);
 												$queryReparatie->execute();
 												
 												if($queryReparatie->rowCount()) {
@@ -260,7 +245,7 @@
 														echo '<td>'.substr(filterData($row['omschrijving']), 0, 30).'...'.'</td>';
 														echo '<td>'.filterData($row['garantie']).'</td>';
 														echo '<td>'.filterData($row['kosten']).'</td>';
-														echo '<td><a href="reparatie.php?id='.filterData($row['id']).'&returnid='.$customerData[0]['id'].'"><i class="fa fa-pencil-square-o fa-lg"></i></a></td>';
+														echo '<td><a href="reparatie.php?id='.filterData($row['id']).'&returnid='.$supplierData[0]['id'].'"><i class="fa fa-pencil-square-o fa-lg"></i></a></td>';
 														echo '</tr>';
 													}
 												} else {
@@ -292,7 +277,7 @@
 					<div class="row">
 						<form id="addReparatieForm">
 							<input type="hidden" name="action" value="addReparatie">
-							<input type="hidden" name="id" value="<?php echo filterData($customerData[0]['id']); ?>">
+							<input type="hidden" name="id" value="<?php echo filterData($supplierData[0]['id']); ?>">
 							<div class="col-lg-6">
 								<div class="form-group">
 									<label>Ingevoerd door</label>

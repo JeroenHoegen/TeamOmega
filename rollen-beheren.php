@@ -85,7 +85,10 @@
                     <li><a href="index.php"><i class="fa fa-bullseye"></i> Overzicht</a></li>
                     <li><a href="klanten.php"><i class="fa fa-tasks"></i> Klanten</a></li>
 					<li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
-					<?php if($userData['role'] == getAuthorityLevel('accountsbeheren')) { ?>
+					<?php if($userData['role'] <= getAuthorityLevel('leveranciersbeheren')) { ?>
+					<li><a href="leveranciers.php"><i class="fa fa-truck"></i> Leveranciers</a></li>
+					<?php } ?>
+					<?php if($userData['role'] <= getAuthorityLevel('accountsbeheren')) { ?>
 					<li><a href="accounts.php"><i class="fa fa-id-card"></i> Accounts beheren</a></li>
 					<li class="active"><a href="#"><i class="fa fa-briefcase"></i> Rollen beheren</a></li>
 					<?php } ?>
@@ -169,6 +172,14 @@
 												<option value="1" <?php if($roleInformation['wachtwoordwijzigen'] == 1) {echo ' selected';} ?>>Beheerder</option>
 											</select>
 										</div>
+										<div class="form-group">
+											<label>Leveranciers beheren</label>
+											<select class="form-control" name="leveranciersbeheren" tabindex="11">
+												<option value="3" <?php if($roleInformation['leveranciersbeheren'] == 3) {echo ' selected';} ?>>Stagair</option>
+												<option value="2" <?php if($roleInformation['leveranciersbeheren'] == 2) {echo ' selected';} ?>>Medewerker</option>
+												<option value="1" <?php if($roleInformation['leveranciersbeheren'] == 1) {echo ' selected';} ?>>Beheerder</option>
+											</select>
+										</div>
 									</div>
 									<div class="col-lg-6">
 										<div class="form-group">
@@ -205,7 +216,7 @@
 										</div>
 										<div class="form-group">
 											<label>Berichten versturen</label>
-											<select class="form-control" name="berichtversturen" tabindex="8">
+											<select class="form-control" name="berichtversturen" tabindex="10">
 												<option value="3" <?php if($roleInformation['berichtversturen'] == 3) {echo ' selected';} ?>>Stagair</option>
 												<option value="2" <?php if($roleInformation['berichtversturen'] == 2) {echo ' selected';} ?>>Medewerker</option>
 												<option value="1" <?php if($roleInformation['berichtversturen'] == 1) {echo ' selected';} ?>>Beheerder</option>

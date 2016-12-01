@@ -6,7 +6,7 @@
 	checkLogin();
 	
 	//First check if the user has authority
-	checkAuthority('overzichtbekijken');
+	checkAuthority('leveranciersbeheren');
 	
 	//Set all the userdata to an array
 	$userData = getUserData();
@@ -23,7 +23,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Euro Discount - Klanten overzicht</title>
+    <title>Euro Discount - Leverancier overzicht</title>
 
     <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css" />
@@ -50,16 +50,16 @@
 				});
 			});
 			
-			$('#addCustomerForm').on('submit', function(event) {
+			$('#addSupplierForm').on('submit', function(event) {
                 event.preventDefault();    
                 $.ajax({
-                    url: 'resources/add.ajax.php',
+                    url: 'resources/suppliers/add.ajax.php',
                     type: 'post',
                     data: $(this).serialize(),
                     dataType: 'json',
                     success: function(response) {
 						if(response.success) {
-							window.location = 'klant.php?id='+response.newcustomerid;
+							window.location = 'leverancier.php?id='+response.newsupplierid;
 						} else {
 							$('#alert-failed').fadeIn(500); 
 						}
@@ -86,16 +86,9 @@
             </div>
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
-                    <li><a href="index.php"><i class="fa fa-bullseye"></i> Overzicht</a></li>
-                    <li class="active"><a href="klanten.php"><i class="fa fa-tasks"></i> Klanten</a></li>
-					<li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
-					<?php if($userData['role'] <= getAuthorityLevel('leveranciersbeheren')) { ?>
-					<li><a href="leveranciers.php"><i class="fa fa-truck"></i> Leveranciers</a></li>
-					<?php } ?>
-					<?php if($userData['role'] <= getAuthorityLevel('accountsbeheren')) { ?>
-					<li><a href="accounts.php"><i class="fa fa-id-card"></i> Accounts beheren</a></li>
-					<li><a href="rollen-beheren.php"><i class="fa fa-briefcase"></i> Rollen beheren</a></li>
-					<?php } ?>
+                    <li><a href="index.php"><i class="fa fa-arrow-left"></i> Terug</a></li>
+                    <li class="active"><a href="leveranciers.php"><i class="fa fa-truck"></i> Leveranciers</a></li>
+					<li><a href="categorie.php"><i class="fa fa-tags"></i> Categorieën</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">
                      <li class="dropdown user-dropdown">
@@ -115,55 +108,47 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-8">
-                    <h1>Overzicht klanten</h1>
+                    <h1>Overzicht leveranciers</h1>
                 </div>
 				<div class="col-lg-4 customer-search">
-					<input type="text" class="form-control" id="searchInput" placeholder="Zoek klant" />
+					<input type="text" class="form-control" id="searchInput" placeholder="Zoek leverancier" />
 				</div>
             </div>
 			<div class="row">
 				<div class="col-lg-8">
-					<a class="btn btn-primary" data-toggle="modal" data-target="#addCustomerModal">Nieuwe klant</a>
+					<a class="btn btn-primary" data-toggle="modal" data-target="#addSupplierModal">Nieuwe leverancier</a>
 				</div>
-				<?php if($userData['role'] <= getAuthorityLevel('klantverwijderen')) { ?>
-				<div class="col-lg-4 text-right">
-					<a class="btn btn-primary" href="exporteren.php">Exporteren</a>
-				</div>
-				<?php } ?>
 			</div>
 			<div class="row">
 				<div class="col-lg-12">
 					<table class="table table-striped">
 						<thead>
 							<tr>
-								<th>Voornaam</th>
-								<th>Achternaam</th>
+								<th>Naam</th>
 								<th>Adres</th>
-								<th>Woonplaats</th>
 								<th>Postcode</th>
-								<th>E-mailadres</th>
+								<th>Vestigingsplaats</th>
 								<th>Telefoonnummer</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php 
-								$query = $connection->prepare('select * from klant where inactief=0');
+								$query = $connection->prepare('select * from leverancier where inactief=0');
 								$query->execute();
 								if($query->rowCount()) {
 									while($row = $query->fetch()) {
 										echo '<tr>';
-										echo '<td>'.filterData($row['voornaam']).'</td>';
-										echo '<td>'.filterData($row['achternaam']).'</td>';
+										echo '<td>'.filterData($row['naam']).'</td>';
 										echo '<td>'.filterData($row['adres']).'</td>';
-										echo '<td>'.filterData($row['woonplaats']).'</td>';
 										echo '<td>'.filterData($row['postcode']).'</td>';
-										echo '<td>'.filterData($row['email']).'</td>';
+										echo '<td>'.filterData($row['vestigingsplaats']).'</td>';
 										echo '<td>'.filterData($row['telefoonnummer']).'</td>';
-										echo '<td><a href="klant.php?id='.filterData($row['id']).'"><i class="fa fa-pencil-square-o fa-lg"></i></a></td>';
+										echo '<td><a href="leverancier.php?id='.filterData($row['id']).'"><i class="fa fa-pencil-square-o fa-lg"></i></a></td>';
 										echo '</tr>';
 									}
 								} else {
-									echo '<tr><td>Er zijn geen klanten gevonden.</td></tr>';
+									echo '<tr><td>Er zijn geen leverancieren gevonden.</td></tr>';
 								}
 							?>
 						</tbody>
@@ -173,50 +158,42 @@
         </div>
     </div>
     <!-- /#wrapper -->
-	<div id="addCustomerModal" class="modal fade" role="dialog">
+	<div id="addSupplierModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Nieuwe klant</h4>
+					<h4 class="modal-title">Nieuwe leverancier</h4>
 				</div>
 				<div class="modal-body">
 					<div id="alert-failed" class="alert alert-danger no-display">
 						<strong>Oeps!</strong> Controleer of alle velden zijn ingevuld.
 					</div>
 					<div class="row">
-						<form id="addCustomerForm">
-							<input type="hidden" name="action" value="addCustomer">
+						<form id="addSupplierForm">
+							<input type="hidden" name="action" value="addSupplier">
 							<div class="col-lg-6">
 								<div class="form-group">
-									<label>Voornaam</label>
-									<input type="text" class="form-control" name="voornaam" placeholder="Voornaam" tabindex="1" required>
-								</div>
-								<div class="form-group">
-									<label>Adres</label>
-									<input type="text" class="form-control" name="adres" placeholder="Adres" tabindex="3" required>
+									<label>Naam</label>
+									<input type="text" class="form-control" name="naam" placeholder="Naam" tabindex="1" required>
 								</div>
 								<div class="form-group">
 									<label>Postcode</label>
-									<input type="text" class="form-control" name="postcode" placeholder="Postcode" tabindex="5" required>
+									<input type="text" class="form-control" name="postcode" placeholder="Postcode" tabindex="3" required>
 								</div>
 								<div class="form-group">
-									<label>E-mailadres</label>
-									<input type="text" class="form-control" name="email" placeholder="E-mailadres" tabindex="7" required>
+									<label>Telefoonnummer</label>
+									<input type="text" class="form-control" name="telefoonnummer" placeholder="Telefoonnummer" tabindex="5" required>
 								</div>
 							</div>
 							<div class="col-lg-6">
 								<div class="form-group">
-									<label>Achternaam</label>
-									<input type="text" class="form-control" name="achternaam" placeholder="Achternaam" tabindex="2" required>
+									<label>Adres</label>
+									<input type="text" class="form-control" name="adres" placeholder="Adres" tabindex="2" required>
 								</div>
 								<div class="form-group">
-									<label>Woonplaats</label>
-									<input type="text" class="form-control" name="woonplaats" placeholder="Woonplaats" tabindex="4" required>
-								</div>
-								<div class="form-group">
-									<label>Telefoonnummer</label>
-									<input type="text" class="form-control" name="telefoonnummer" placeholder="Telefoonnummer" tabindex="6" required>
+									<label>Vestigingsplaats</label>
+									<input type="text" class="form-control" name="vestigingsplaats" placeholder="Vestigingsplaats" tabindex="4" required>
 								</div>
 							</div>
 							<div class="col-lg-12">

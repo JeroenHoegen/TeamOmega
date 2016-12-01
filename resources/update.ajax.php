@@ -17,7 +17,7 @@
 			//First check if the user has authority
 			checkAuthority('klantbewerken');
 			
-			$query = $connection->prepare("update klant set voornaam=:voornaam, achternaam=:achternaam, adres=:adres, woonplaats=:woonplaats, postcode=:postcode, email=:email, telefoonnummer=:telefoonnummer where id=:id"); 
+			$query = $connection->prepare("update klant set voornaam=:voornaam, achternaam=:achternaam, adres=:adres, woonplaats=:woonplaats, postcode=:postcode, email=:email, telefoonnummer=:telefoonnummer where id=:id and inactief=0"); 
 			$query->bindParam(':id', $_POST['id']);
 			$query->bindParam(':voornaam', $_POST['voornaam']);
 			$query->bindParam(':achternaam', $_POST['achternaam']);
@@ -162,6 +162,7 @@
 										   when "accountsbeheren" then :accountsbeheren
 										   when "wachtwoordwijzigen" then :wachtwoordwijzigen
 										   when "berichtversturen" then :berichtversturen
+										   when "leveranciersbeheren" then :leveranciersbeheren
 										   end');
 			$query->bindParam(':klanttoevoegen', $_POST['klanttoevoegen']);
 			$query->bindParam(':klantbewerken', $_POST['klantbewerken']);
@@ -173,6 +174,7 @@
 			$query->bindParam(':accountsbeheren', $_POST['accountsbeheren']);
 			$query->bindParam(':wachtwoordwijzigen', $_POST['wachtwoordwijzigen']);
 			$query->bindParam(':berichtversturen', $_POST['berichtversturen']);
+			$query->bindParam(':leveranciersbeheren', $_POST['leveranciersbeheren']);
 				
 			$query->execute();
 				
