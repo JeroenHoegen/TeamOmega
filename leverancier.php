@@ -18,7 +18,7 @@
 	//Assign the connection to a local connection variable
 	$connection = getConnection();
 	
-	//Get all the information of the customer from the provided id
+	//Get all the information of the supplier from the provided id
 	//returns array $supplierData on success, returns to leverancieren.php
 	//on failure
 	if(isset($_GET['id'])) {
@@ -71,17 +71,17 @@
                 });
             });
 			
-			$('#removeCustomer').click(function() {
+			$('#removeSupplier').click(function() {
 				if(confirm('Weet u zeker dat u deze leverancier wil verwijderen?')) {
 					event.preventDefault();    
 					$.ajax({
-						url: 'resources/remove.ajax.php',
+						url: 'resources/suppliers/remove.ajax.php',
 						type: 'post',
-						data: 'action=removeCustomer&id=<?php echo filterData($supplierData[0]['id']); ?>',
+						data: 'action=removeSupplier&id=<?php echo filterData($supplierData[0]['id']); ?>',
 						dataType: 'json',
 						success: function(response) {
 							if(response.success) {					
-								window.location = 'leverancieren.php';
+								window.location = 'leveranciers.php';
 							} else {
 								alert('Kan de leverancier niet verwijderen, probeer het nog eens.');  
 							}
@@ -93,16 +93,16 @@
 				}
 			});
 			
-			$('#addReparatieForm').on('submit', function(event) {
+			$('#addProductForm').on('submit', function(event) {
 				event.preventDefault();
                 $.ajax({
-                    url: 'resources/add.ajax.php',
+                    url: 'resources/suppliers/add.ajax.php',
                     type: 'post',
                     data: $(this).serialize(),
                     dataType: 'json',
                     success: function(response) {
 						if(response.success) {
-							window.location = 'reparatie.php?id='+response.newreparatieid+'&returnid='+response.returnid;
+							window.location = 'product.php?id='+response.newreparatieid+'&returnid='+response.returnid;
 						} else {
 							$('#alert-failed').fadeIn(500); 
 						}
@@ -155,7 +155,7 @@
                 </div>
 				<?php if($userData['role'] <= getAuthorityLevel('leverancierverwijderen')) { ?>
 				<div class="col-lg-4 text-right top-btn">
-					<a class="btn btn-danger" id="removeCustomer">Verwijderen</a>
+					<a class="btn btn-danger" id="removeSupplier">Verwijderen</a>
 				</div>
 				<?php } ?>
             </div>
@@ -168,12 +168,12 @@
 			<div class="row">
 				<div class="col-lg-12">
 					<ul class="nav nav-tabs">
-						<li class="active"><a data-toggle="tab" href="#leveranciergegevens">leverancier gegevens</a></li>
-						<li><a data-toggle="tab" href="#reparaties">Reparaties</a></li>
+						<li class="active"><a data-toggle="tab" href="#leveranciergegevens">Gegevens</a></li>
+						<li><a data-toggle="tab" href="#producten">Producten</a></li>
 					</ul>
 					<div class="tab-content">
 						<div id="leveranciergegevens" class="tab-pane fade in active">
-							<h3>leverancier gegevens</h3>
+							<h3>Leverancier gegevens</h3>
 							<div class="row">
 								<form id="updateSupplierForm">
 									<input type="hidden" name="action" value="updateSupplier">
@@ -208,13 +208,13 @@
 								</form>
 							</div>
 						</div>
-						<div id="reparaties" class="tab-pane fade">
+						<div id="producten" class="tab-pane fade">
 							<div class="row">
 								<div class="col-lg-8">
-									<h3>Reparaties</h3>
+									<h3>Producten</h3>
 								</div>
 								<div class="col-lg-4 text-right top-table-btn">
-									<a class="btn btn-primary" data-toggle="modal" data-target="#addReparatieModal">Nieuwe reparatie</a>
+									<a class="btn btn-primary" data-toggle="modal" data-target="#addProductModal">Nieuw product</a>
 								</div>
 							</div>
 							<div class="row">
@@ -222,34 +222,36 @@
 									<table class="table table-striped">
 										<thead>
 											<tr>
-												<th>Ingevoerd door</th>
-												<th>Datum invoering</th>
-												<th>Serienummer</th>
+												<th>Naam</th>
+												<th>Productnummer</th>
 												<th>Omschrijving</th>
-												<th>Garantie</th>
-												<th>Kosten</th>
+												<th>Categorie</th>
+												<th>Prijs</th>
+												<th></th>
 											</tr>
 										</thead>
 										<tbody>
 											<?php 
-												$queryReparatie = $connection->prepare('select * from reparatie where leverancierid=:leverancierid'); 
-												$queryReparatie->bindParam(':leverancierid', $supplierData[0]['id']);
-												$queryReparatie->execute();
+												$queryProduct = $connection->prepare('select p.naam, p.productnummer, p.omschrijving,
+																					  c.naam as categorie, p.prijs from product p
+																					  join categorie c on p.categorieid=c.id
+																					  where leverancierid=:leverancierid'); 
+												$queryProduct->bindParam(':leverancierid', $supplierData[0]['id']);
+												$queryProduct->execute();
 												
-												if($queryReparatie->rowCount()) {
-													while($row = $queryReparatie->fetch()) {
+												if($queryProduct->rowCount()) {
+													while($row = $queryProduct->fetch()) {
 														echo '<tr>';
-														echo '<td>'.filterData($row['medewerker']).'</td>';
-														echo '<td>'.filterData($row['startdatum']).'</td>';
-														echo '<td>'.filterData($row['serienummer']).'</td>';
+														echo '<td>'.filterData($row['naam']).'</td>';
+														echo '<td>'.filterData($row['productnummer']).'</td>';
 														echo '<td>'.substr(filterData($row['omschrijving']), 0, 30).'...'.'</td>';
-														echo '<td>'.filterData($row['garantie']).'</td>';
-														echo '<td>'.filterData($row['kosten']).'</td>';
-														echo '<td><a href="reparatie.php?id='.filterData($row['id']).'&returnid='.$supplierData[0]['id'].'"><i class="fa fa-pencil-square-o fa-lg"></i></a></td>';
+														echo '<td>'.filterData($row['categorie']).'</td>';
+														echo '<td>'.filterData($row['prijs']).'</td>';
+														//echo '<td><a href="reparatie.php?id='.filterData($row['id']).'&returnid='.$supplierData[0]['id'].'"><i class="fa fa-pencil-square-o fa-lg"></i></a></td>';
 														echo '</tr>';
 													}
 												} else {
-													echo '<tr><td>Er zijn geen reparaties gevonden.</td></tr>';
+													echo '<tr><td>Er zijn geen producten gevonden.</td></tr>';
 												}
 											?>
 										</tbody>
@@ -263,39 +265,53 @@
         </div>
     </div>
     <!-- /#wrapper -->
-	<div id="addReparatieModal" class="modal fade" role="dialog">
+	<div id="addProductModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Nieuwe reparatie</h4>
+					<h4 class="modal-title">Nieuw product</h4>
 				</div>
 				<div class="modal-body">
 					<div id="alert-failed" class="alert alert-danger no-display">
 						<strong>Oeps!</strong> Controleer of alle velden zijn ingevuld.
 					</div>
 					<div class="row">
-						<form id="addReparatieForm">
-							<input type="hidden" name="action" value="addReparatie">
+						<form id="addProductForm">
+							<input type="hidden" name="action" value="addProduct">
 							<input type="hidden" name="id" value="<?php echo filterData($supplierData[0]['id']); ?>">
 							<div class="col-lg-6">
 								<div class="form-group">
-									<label>Ingevoerd door</label>
-									<input type="text" class="form-control" name="medewerker" value="<?php echo getUserData()['username'] ?>" tabindex="1" readonly>
+									<label>Product naam</label>
+									<input type="text" class="form-control" name="productnaam" placeholder="Productnaam" tabindex="1" required>
+								</div>
+								<div class="form-group">
+									<label>Prijs</label>
+									<input type="text" class="form-control" name="prijs" placeholder="Prijs" tabindex="3" required>
 								</div>
 								<div class="form-group">
 									<label>Omschrijving</label>
-									<textarea class="form-control" rows="5" name="omschrijving" placeholder="Omschrijving" tabindex="3" required></textarea>
+									<textarea class="form-control" rows="5" name="omschrijving" placeholder="Omschrijving" tabindex="5" required></textarea>
 								</div>
 							</div>
 							<div class="col-lg-6">
 								<div class="form-group">
-									<label>Datum invoering</label>
-									<input type="text" class="form-control" name="startdatum" value="<?php echo date('d-m-Y'); ?>" placeholder="Datum invoering" tabindex="2" readonly>
-								</div>
+									<label>Categorie</label>
+										<select class="form-control" name="categorie" tabindex="2">
+											<?php
+												//Get all the categories from the database
+												$userQuery = $connection->prepare('select id, naam from categorie');
+												$userQuery->execute();
+												
+												while($row = $userQuery->fetch()) {
+													echo '<option value="'.$row['id'].'">'.$row['naam'].'</option>';
+												}
+											?>
+										</select>
+									</div>
 								<div class="form-group">
-									<label>Serienummer</label>
-									<input type="text" class="form-control" name="serienummer" placeholder="Serienummer" tabindex="4" required>
+									<label>Productnummer</label>
+									<input type="text" class="form-control" name="productnummer" placeholder="Productnummer" tabindex="4" required>
 								</div>
 							</div>
 							<div class="col-lg-12">

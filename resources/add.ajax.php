@@ -5,7 +5,7 @@
 	//Require all the general functions
     require_once $_SERVER['DOCUMENT_ROOT'].'/omega/resources/library/general.func.php';
 	
-	//Array to the new customerid and status
+	//Array to store the new customerid and status
     $response = array();
     
 	if(isset($_POST['action'])) {
@@ -53,7 +53,7 @@
 			$reparatieid = $connection->lastInsertId();
 				
 			//Store the time (hour:minute) to use it in the status updates
-			$time = date('h:i');
+			$time = date('H:i');
 			
 			//Add status to reparatie
 			addStatusToReparatie($reparatieid, $_POST['startdatum'], $time, 'Reparatie toegevoegd', '0');	
@@ -97,7 +97,7 @@
 			//Store the date and time (hour:minute), otherwise it throws an error
 			//regarding pdo 'passed by reference'.
 			$date = date('d-m-Y');
-			$time = date('h:i');
+			$time = date('H:i');
 
 			$query = $connection->prepare('insert into bericht values(null, :van, :naar, :datum, :tijd, :bericht, 0)');
 			$query->bindParam(':van', getUserData()['username']);
