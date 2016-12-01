@@ -34,6 +34,45 @@
 			} else {
 				$response['success'] = false;
 			}
+		} else if($_POST['action'] == 'updateProduct') {
+			//First check if the user has authority
+			checkAuthority('leveranciersbeheren');
+			
+			$query = $connection->prepare("update product set categorieid=:categorieid, productnummer=:productnummer, naam=:naam, omschrijving=:omschrijving, prijs=:prijs where id=:id"); 
+			$query->bindParam(':id', $_POST['id']);
+			$query->bindParam(':categorieid', $_POST['categorie']);
+			$query->bindParam(':productnummer', $_POST['productnummer']);
+			$query->bindParam(':naam', $_POST['productnaam']);
+			$query->bindParam(':omschrijving', $_POST['omschrijving']);
+			$query->bindParam(':prijs', $_POST['prijs']);
+				
+			$query->execute();
+				
+			//If update statement succeed
+			if($query->rowCount()) {
+				$response['success'] = true;
+				$response['productnaam'] = filterData($_POST['productnaam']);
+			} else {
+				$response['success'] = false;
+			}
+		} else if($_POST['action'] == 'updateCategory') {
+			//First check if the user has authority
+			checkAuthority('leveranciersbeheren');
+			
+			$query = $connection->prepare("update categorie set naam=:naam, omschrijving=:omschrijving where id=:id"); 
+			$query->bindParam(':id', $_POST['id']);
+			$query->bindParam(':naam', $_POST['categorienaam']);
+			$query->bindParam(':omschrijving', $_POST['omschrijving']);
+				
+			$query->execute();
+				
+			//If update statement succeed
+			if($query->rowCount()) {
+				$response['success'] = true;
+				$response['categorienaam'] = filterData($_POST['categorienaam']);
+			} else {
+				$response['success'] = false;
+			}
 		} else {
 			$response['success'] = false;
 		}

@@ -17,7 +17,7 @@
 		$columnsToExport = $_POST['exportgegevens'];
 		
 		//Here we create the select query with the data of $columnsToExport
-		$columnsMysql = 'select '.filterData(implode(', ', $columnsToExport)).' from klant';
+		$columnsMysql = 'select '.filterData(implode(', ', $columnsToExport)).' from klant where inactief=0';
 		
 		//Here we create the select query
 		$query = $connection->prepare($columnsMysql);

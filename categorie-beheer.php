@@ -23,7 +23,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Euro Discount - Leverancier overzicht</title>
+    <title>Euro Discount - Categorie overzicht</title>
 
     <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css" />
@@ -50,7 +50,7 @@
 				});
 			});
 			
-			$('#addSupplierForm').on('submit', function(event) {
+			$('#addCategoryForm').on('submit', function(event) {
                 event.preventDefault();    
                 $.ajax({
                     url: 'resources/suppliers/add.ajax.php',
@@ -59,7 +59,7 @@
                     dataType: 'json',
                     success: function(response) {
 						if(response.success) {
-							window.location = 'leverancier.php?id='+response.newsupplierid;
+							window.location = 'categorie.php?id='+response.newcategoryid;
 						} else {
 							$('#alert-failed').fadeIn(500); 
 						}
@@ -87,8 +87,8 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li><a href="index.php"><i class="fa fa-arrow-left"></i> Terug</a></li>
-                    <li class="active"><a href="leveranciers.php"><i class="fa fa-truck"></i> Leveranciers</a></li>
-					<li><a href="categorie-beheer.php"><i class="fa fa-tags"></i> Categorieën</a></li>
+                    <li><a href="leveranciers.php"><i class="fa fa-truck"></i> Leveranciers</a></li>
+					<li class="active"><a href="categorie-beheer.php"><i class="fa fa-tags"></i> Categorieën</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">
                      <li class="dropdown user-dropdown">
@@ -108,15 +108,15 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-8">
-                    <h1>Overzicht leveranciers</h1>
+                    <h1>Overzicht categoriën</h1>
                 </div>
 				<div class="col-lg-4 customer-search">
-					<input type="text" class="form-control" id="searchInput" placeholder="Zoek leverancier" />
+					<input type="text" class="form-control" id="searchInput" placeholder="Zoek categorie" />
 				</div>
             </div>
 			<div class="row">
 				<div class="col-lg-8">
-					<a class="btn btn-primary" data-toggle="modal" data-target="#addSupplierModal">Nieuwe leverancier</a>
+					<a class="btn btn-primary" data-toggle="modal" data-target="#addCategoryModal">Nieuwe categorie</a>
 				</div>
 			</div>
 			<div class="row">
@@ -125,30 +125,24 @@
 						<thead>
 							<tr>
 								<th>Naam</th>
-								<th>Adres</th>
-								<th>Postcode</th>
-								<th>Vestigingsplaats</th>
-								<th>Telefoonnummer</th>
+								<th>Omschrijving</th>
 								<th></th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php 
-								$query = $connection->prepare('select * from leverancier where inactief=0');
+								$query = $connection->prepare('select * from categorie');
 								$query->execute();
 								if($query->rowCount()) {
 									while($row = $query->fetch()) {
 										echo '<tr>';
 										echo '<td>'.filterData($row['naam']).'</td>';
-										echo '<td>'.filterData($row['adres']).'</td>';
-										echo '<td>'.filterData($row['postcode']).'</td>';
-										echo '<td>'.filterData($row['vestigingsplaats']).'</td>';
-										echo '<td>'.filterData($row['telefoonnummer']).'</td>';
-										echo '<td><a href="leverancier.php?id='.filterData($row['id']).'"><i class="fa fa-pencil-square-o fa-lg"></i></a></td>';
+										echo '<td>'.filterData($row['omschrijving']).'</td>';
+										echo '<td><a href="categorie.php?id='.filterData($row['id']).'"><i class="fa fa-pencil-square-o fa-lg"></i></a></td>';
 										echo '</tr>';
 									}
 								} else {
-									echo '<tr><td>Er zijn geen leverancieren gevonden.</td></tr>';
+									echo '<tr><td>Er zijn geen categoriën gevonden.</td></tr>';
 								}
 							?>
 						</tbody>
@@ -158,42 +152,28 @@
         </div>
     </div>
     <!-- /#wrapper -->
-	<div id="addSupplierModal" class="modal fade" role="dialog">
+	<div id="addCategoryModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Nieuwe leverancier</h4>
+					<h4 class="modal-title">Nieuwe categorie</h4>
 				</div>
 				<div class="modal-body">
 					<div id="alert-failed" class="alert alert-danger no-display">
 						<strong>Oeps!</strong> Controleer of alle velden zijn ingevuld.
 					</div>
 					<div class="row">
-						<form id="addSupplierForm">
-							<input type="hidden" name="action" value="addSupplier">
-							<div class="col-lg-6">
+						<form id="addCategoryForm">
+							<input type="hidden" name="action" value="addCategory">
+							<div class="col-lg-12">
 								<div class="form-group">
 									<label>Naam</label>
 									<input type="text" class="form-control" name="naam" placeholder="Naam" tabindex="1" required>
 								</div>
 								<div class="form-group">
-									<label>Postcode</label>
-									<input type="text" class="form-control" name="postcode" placeholder="Postcode" tabindex="3" required>
-								</div>
-								<div class="form-group">
-									<label>Telefoonnummer</label>
-									<input type="text" class="form-control" name="telefoonnummer" placeholder="Telefoonnummer" tabindex="5" required>
-								</div>
-							</div>
-							<div class="col-lg-6">
-								<div class="form-group">
-									<label>Adres</label>
-									<input type="text" class="form-control" name="adres" placeholder="Adres" tabindex="2" required>
-								</div>
-								<div class="form-group">
-									<label>Vestigingsplaats</label>
-									<input type="text" class="form-control" name="vestigingsplaats" placeholder="Vestigingsplaats" tabindex="4" required>
+									<label>Omschrijving</label>
+									<textarea class="form-control" rows="5" name="omschrijving" placeholder="Omschrijving" tabindex="2" required></textarea>
 								</div>
 							</div>
 							<div class="col-lg-12">

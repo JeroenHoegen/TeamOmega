@@ -121,6 +121,36 @@
 		}
 	}
 	
+	//Get the product data by id returns array on success
+	//and false on failure.
+	function getProductDataById($id) {
+		$connection = getConnection();
+		$query = $connection->prepare('select * from product where id=:id');
+		$query->bindParam(':id', $id);
+		$query->execute();
+		
+		if($query->rowCount() > 0) {
+			return $query->fetchAll();
+		} else {
+			return false;
+		}
+	}
+	
+	//Get the category data by id returns array on success
+	//and false on failure.
+	function getCategoryDataById($id) {
+		$connection = getConnection();
+		$query = $connection->prepare('select * from categorie where id=:id');
+		$query->bindParam(':id', $id);
+		$query->execute();
+		
+		if($query->rowCount() > 0) {
+			return $query->fetchAll();
+		} else {
+			return false;
+		}
+	}
+	
 	//This function adds a new status to a reparatie
 	//Returns the status id on success, false on failure
 	function addStatusToReparatie($reparatieid, $datum, $tijd, $omschrijving, $verwijderen) {

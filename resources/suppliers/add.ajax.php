@@ -59,6 +59,27 @@
 			} else {
 				$response['success'] = false;
 			}
+		} else if($_POST['action'] == 'addCategory') {
+			//First check if the user has authority
+			checkAuthority('leveranciersbeheren');
+			
+			$query = $connection->prepare("insert into categorie values(null, :naam, :omschrijving)"); 
+			$query->bindParam(':naam', $_POST['naam']);
+			$query->bindParam(':omschrijving', $_POST['omschrijving']);
+				
+			$query->execute();
+			
+			//Here we store the id of the newly inserted category
+			$categoryId = $connection->lastInsertId();	
+			
+			//If insert statement succeed
+			if($query->rowCount()) {
+				$response['success'] = true;
+				
+				$response['newcategoryid'] = $categoryId;
+			} else {
+				$response['success'] = false;
+			}
 		} else {
 			$response['success'] = false;
 		}

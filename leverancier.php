@@ -131,7 +131,7 @@
                 <ul class="nav navbar-nav side-nav">
                     <li><a href="index.php"><i class="fa fa-arrow-left"></i> Terug</a></li>
                     <li class="active"><a href="leveranciers.php"><i class="fa fa-truck"></i> Leveranciers</a></li>
-					<li><a href="categorie.php"><i class="fa fa-tags"></i> Categorieën</a></li>
+					<li><a href="categorie-beheer.php"><i class="fa fa-tags"></i> Categorieën</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right navbar-user">
                      <li class="dropdown user-dropdown">
@@ -153,7 +153,7 @@
                 <div class="col-lg-8">
                     <h1 id="naam">leverancier - <?php echo filterData($supplierData[0]['naam']); ?></h1>
                 </div>
-				<?php if($userData['role'] <= getAuthorityLevel('leverancierverwijderen')) { ?>
+				<?php if($userData['role'] <= getAuthorityLevel('leveranciersbeheren')) { ?>
 				<div class="col-lg-4 text-right top-btn">
 					<a class="btn btn-danger" id="removeSupplier">Verwijderen</a>
 				</div>
@@ -232,7 +232,7 @@
 										</thead>
 										<tbody>
 											<?php 
-												$queryProduct = $connection->prepare('select p.naam, p.productnummer, p.omschrijving,
+												$queryProduct = $connection->prepare('select p.id, p.naam, p.productnummer, p.omschrijving,
 																					  c.naam as categorie, p.prijs from product p
 																					  join categorie c on p.categorieid=c.id
 																					  where leverancierid=:leverancierid'); 
@@ -247,7 +247,7 @@
 														echo '<td>'.substr(filterData($row['omschrijving']), 0, 30).'...'.'</td>';
 														echo '<td>'.filterData($row['categorie']).'</td>';
 														echo '<td>'.filterData($row['prijs']).'</td>';
-														//echo '<td><a href="reparatie.php?id='.filterData($row['id']).'&returnid='.$supplierData[0]['id'].'"><i class="fa fa-pencil-square-o fa-lg"></i></a></td>';
+														echo '<td><a href="product.php?id='.filterData($row['id']).'&returnid='.$supplierData[0]['id'].'"><i class="fa fa-pencil-square-o fa-lg"></i></a></td>';
 														echo '</tr>';
 													}
 												} else {

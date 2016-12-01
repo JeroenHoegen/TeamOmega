@@ -28,6 +28,36 @@
 			} else {
 				$response['success'] = false;
 			}
+		} else if($_POST['action'] == 'removeProduct') {
+			//First check if the user has authority
+			checkAuthority('leveranciersbeheren');
+			
+			$query = $connection->prepare('delete from product where id=:id');
+			$query->bindParam(':id', $_POST['id']);
+				
+			$query->execute();
+				
+			//If insert statement succeed
+			if($query->rowCount()) {
+				$response['success'] = true;
+			} else {
+				$response['success'] = false;
+			}
+		} else if($_POST['action'] == 'removeCategory') {
+			//First check if the user has authority
+			checkAuthority('leveranciersbeheren');
+			
+			$query = $connection->prepare('delete from categorie where id=:id');
+			$query->bindParam(':id', $_POST['id']);
+				
+			$query->execute();
+				
+			//If insert statement succeed
+			if($query->rowCount()) {
+				$response['success'] = true;
+			} else {
+				$response['success'] = false;
+			}
 		} else {
 			$response['success'] = false;
 		}
