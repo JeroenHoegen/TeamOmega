@@ -5,7 +5,7 @@
 	//Require all the general functions
     require_once $_SERVER['DOCUMENT_ROOT'].'/omega/resources/library/general.func.php';
 	
-	//Array to the new customerid and status
+	//Array to store the new customerid and status
     $response = array();
     
 	if(isset($_POST['action'])) {
