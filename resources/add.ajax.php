@@ -5,7 +5,7 @@
 	//Require all the general functions
     require_once $_SERVER['DOCUMENT_ROOT'].'/omega/resources/library/general.func.php';
 	
-	//Array to store the new customerid and status
+	//Array to the new customerid and status
     $response = array();
     
 	if(isset($_POST['action'])) {
@@ -18,7 +18,7 @@
 			//First check if the user has authority
 			checkAuthority('klanttoevoegen');
 			
-			$query = $connection->prepare("insert into klant values(null, :voornaam, :achternaam, :adres, :woonplaats, :postcode, :email, :telefoonnummer)"); 
+			$query = $connection->prepare("insert into klant values(null, :voornaam, :achternaam, :adres, :woonplaats, :postcode, :email, :telefoonnummer, 0)"); 
 			$query->bindParam(':voornaam', $_POST['voornaam']);
 			$query->bindParam(':achternaam', $_POST['achternaam']);
 			$query->bindParam(':adres', $_POST['adres']);
@@ -53,7 +53,7 @@
 			$reparatieid = $connection->lastInsertId();
 				
 			//Store the time (hour:minute) to use it in the status updates
-			$time = date('H:i');
+			$time = date('h:i');
 			
 			//Add status to reparatie
 			addStatusToReparatie($reparatieid, $_POST['startdatum'], $time, 'Reparatie toegevoegd', '0');	
