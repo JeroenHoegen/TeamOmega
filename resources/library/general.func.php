@@ -2,6 +2,22 @@
 	//We need to require config.php because of the database settings
 	require $_SERVER['DOCUMENT_ROOT'].'/omega/resources/config.php';
 
+	//Check if the session has been started
+	if(session_status() == PHP_SESSION_NONE) {
+		session_start();
+	}
+	
+	//Since this file is required by all the other files we use this
+	//file to check if the user has been 5 minutes inactive.
+	if (isset($_SESSION['last_activity'])) {
+		if((time() - $_SESSION['last_activity']) > 300) {
+			session_destroy();
+			header('Location: /omega/login.php');
+		} else {
+			$_SESSION['last_activity'] = time();
+		}
+	}
+	
 	//Returns the PDO connection
 	function getConnection() {
 		try {

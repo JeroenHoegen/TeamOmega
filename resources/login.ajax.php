@@ -12,10 +12,6 @@
 		//Assign the connection to a local connection variable
 		$connection = getConnection();
 		
-        if(session_status() == PHP_SESSION_NONE) {
-			session_start();
-		}
-        
         $username = $_POST['username'];
         $password = hash('sha256', $_POST['password']);
         
@@ -38,6 +34,7 @@
 			$_SESSION['role'] = $userData[0]['rol'];
 			$_SESSION['firstname'] = $userData[0]['voornaam'];
 			$_SESSION['lastname'] = $userData[0]['achternaam'];
+			$_SESSION['last_activity'] = time();
 		} else {
 			$response['success'] = false;
 		}
