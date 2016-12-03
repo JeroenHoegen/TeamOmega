@@ -62,7 +62,11 @@
 							$('#alert-success').fadeIn(500).delay(1000).fadeOut(500);
 							
 							if(response.newstatus != null) {
-								window.location = window.location;
+								if(!response.mailsuccess) {
+									$('#alert-mail-fail').fadeIn(500);
+								} else {
+									window.location = window.location;
+								}
 								$('#statusupdates table').append('<tr id="'+response.id+'"><td>'+response.username+'</td><td>'+response.date+'</td><td>'+response.time+'</td><td>'+response.statusupdate+'</td><td><a class="removeStatus" id="'+response.id+'"><i class="fa fa-trash-o fa-lg"></i></a></td></tr>');
 								$('#statusupdate').val('');
 							}
@@ -152,7 +156,7 @@
                     <li><a href="index.php"><i class="fa fa-bullseye"></i> Overzicht</a></li>
                     <li class="active"><a href="klanten.php"><i class="fa fa-tasks"></i> Klanten</a></li>
 					<li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
-					<?php if($userData['role'] <= getAuthorityLevel('accountsbeheren')) { ?>
+					<?php if($userData['role'] == getAuthorityLevel('accountsbeheren')) { ?>
 					<li><a href="accounts.php"><i class="fa fa-id-card"></i> Accounts beheren</a></li>
 					<li><a href="rollen-beheren.php"><i class="fa fa-briefcase"></i> Rollen beheren</a></li>
 					<?php } ?>
@@ -183,6 +187,9 @@
             </div>
 			<div id="alert-failed" class="alert alert-danger no-display">
 				<strong>Oeps!</strong> Controleer of alle velden zijn ingevuld.
+			</div>
+			<div id="alert-mail-fail" class="alert alert-danger no-display">
+				<strong>Oeps!</strong> De email is niet verstuurd.
 			</div>
 			<div id="alert-success" class="alert alert-success no-display">
 				<strong><i class="fa fa-thumbs-up fa-lg"></i></strong> De gegevens zijn met succes gewijzigd.
