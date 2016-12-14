@@ -60,6 +60,8 @@
                     success: function(response) {
 						if(response.success) {
 							window.location = 'accounts.php';
+						} else if(response.passwordfail) { 
+							$('#alert-failed-password').fadeIn(500); 
 						} else {
 							$('#alert-failed').fadeIn(500); 
 						}
@@ -172,6 +174,9 @@
 				<div class="modal-body">
 					<div id="alert-failed" class="alert alert-danger no-display">
 						<strong>Oeps!</strong> Controleer of de gebruikersnaam uniek is
+					</div>
+					<div id="alert-failed-password" class="alert alert-danger no-display">
+						<strong>Oeps!</strong> Controleer of het wachtwoord bestaat uit minimaal 7 karakters en 1 niet-alfanumeriek teken
 					</div>
 					<div class="row">
 						<form id="addUserForm">

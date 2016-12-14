@@ -110,23 +110,28 @@
 			
 			//Check if the provided password match
 			if($_POST['nieuwwachtwoord'] == $_POST['bevestigwachtwoord']) {
-				//bindParam only accepts variables so we declare them below
-				$wachtwoord = hash('sha256', $_POST['huidigwachtwoord']);
-				$nieuwwachtwoord = hash('sha256', $_POST['nieuwwachtwoord']);
-				
-				$query = $connection->prepare('update gebruiker set wachtwoord=:nieuwwachtwoord where gebruikersnaam=:gebruikersnaam and wachtwoord=:wachtwoord'); 
-				$query->bindParam(':gebruikersnaam', getUserData()['username']);
-				$query->bindParam(':wachtwoord', $wachtwoord);
-				$query->bindParam(':nieuwwachtwoord', $nieuwwachtwoord);
-				
-				$query->execute();
-					
-				//If update statement succeed
-				if($query->rowCount()) {
-					$response['success'] = true;
+				//First check if the password meets the requirements
+				if(!checkPassword($_POST['nieuwwachtwoord'])) {
+					$response['passwordfail'] = true;
 				} else {
-					//throw error current password does not match
-					$response['matchfail'] = true;
+					//bindParam only accepts variables so we declare them below
+					$wachtwoord = hash('sha256', $_POST['huidigwachtwoord']);
+					$nieuwwachtwoord = hash('sha256', $_POST['nieuwwachtwoord']);
+					
+					$query = $connection->prepare('update gebruiker set wachtwoord=:nieuwwachtwoord where gebruikersnaam=:gebruikersnaam and wachtwoord=:wachtwoord'); 
+					$query->bindParam(':gebruikersnaam', getUserData()['username']);
+					$query->bindParam(':wachtwoord', $wachtwoord);
+					$query->bindParam(':nieuwwachtwoord', $nieuwwachtwoord);
+					
+					$query->execute();
+						
+					//If update statement succeed
+					if($query->rowCount()) {
+						$response['success'] = true;
+					} else {
+						//throw error current password does not match
+						$response['matchfail'] = true;
+					}
 				}
 			} else {
 				//throw error

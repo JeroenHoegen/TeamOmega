@@ -47,6 +47,8 @@
 							$('input').val('');
 						} else if(response.matchfail) {
 							$('#alert-failed').fadeIn(500).delay(1000).fadeOut(500); 
+						} else if(response.passwordfail) {
+							$('#alert-failed-password').fadeIn(500).delay(1000).fadeOut(500); 
 						} else {
 							$('#alert-failed-2').fadeIn(500).delay(1000).fadeOut(500);  
 						}
@@ -110,6 +112,9 @@
 			</div>
 			<div id="alert-failed-2" class="alert alert-danger no-display">
 				<strong>Oeps!</strong> Het nieuwe wachtwoord komt niet overeen.
+			</div>
+			<div id="alert-failed-password" class="alert alert-danger no-display">
+				<strong>Oeps!</strong> Controleer of het wachtwoord bestaat uit minimaal 7 karakters en 1 niet-alfanumeriek teken
 			</div>
 			<div id="alert-success" class="alert alert-success no-display">
 				<strong><i class="fa fa-thumbs-up fa-lg"></i></strong> De gegevens zijn met succes gewijzigd.

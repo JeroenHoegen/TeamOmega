@@ -71,24 +71,29 @@
 			//First check if the user has authority
 			checkAuthority('accountsbeheren');
 		
-			//Convert the password to a md5 hash, since bindParam
-			//only accepts one variable
-			$password = hash('sha256', $_POST['wachtwoord']);
-			
-			$query = $connection->prepare("insert into gebruiker values (:gebruikersnaam, :wachtwoord, :rol, :voornaam, :achternaam, 0)");
-			$query->bindParam(':gebruikersnaam', $_POST['gebruikersnaam']);
-			$query->bindParam(':wachtwoord', $password);
-			$query->bindParam(':rol', $_POST['rol']);
-			$query->bindParam(':voornaam', $_POST['voornaam']);
-			$query->bindParam(':achternaam', $_POST['achternaam']);
-			
-			$query->execute();
-				
-			//If insert statement succeed
-			if($query->rowCount()) {
-				$response['success'] = true;
+			//First check if the password meets the requirements
+			if(!checkPassword($_POST['wachtwoord'])) {
+				$response['passwordfail'] = true;
 			} else {
-				$response['success'] = false;
+				//Convert the password to a md5 hash, since bindParam
+				//only accepts one variable
+				$password = hash('sha256', $_POST['wachtwoord']);
+				
+				$query = $connection->prepare("insert into gebruiker values (:gebruikersnaam, :wachtwoord, :rol, :voornaam, :achternaam, 0)");
+				$query->bindParam(':gebruikersnaam', $_POST['gebruikersnaam']);
+				$query->bindParam(':wachtwoord', $password);
+				$query->bindParam(':rol', $_POST['rol']);
+				$query->bindParam(':voornaam', $_POST['voornaam']);
+				$query->bindParam(':achternaam', $_POST['achternaam']);
+				
+				$query->execute();
+					
+				//If insert statement succeed
+				if($query->rowCount()) {
+					$response['success'] = true;
+				} else {
+					$response['success'] = false;
+				}
 			}
 		} else if($_POST['action'] == 'sendMessage') {
 			//First check if the user has authority

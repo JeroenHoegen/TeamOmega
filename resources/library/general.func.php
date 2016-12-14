@@ -85,6 +85,17 @@
 		return $userData;
 	}
 	
+	//This function checks if the password meets the requirements
+	//At least 7 characters and at least one non alphanumeric character.
+	//Returns true on success, and false on failure.
+	function checkPassword($password) {
+		if(strlen($password) >= 7 && !ctype_alnum($password)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	//This functions removes special characters in order to prevent XSS
 	function filterData($data, $status=false) {
 		return (empty($data) && !$status) ? '-' : htmlspecialchars($data, ENT_QUOTES, 'UTF-8');

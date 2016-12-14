@@ -80,7 +80,7 @@
 			</div>
 			<div class="row">
 				<?php 
-					$query = $connection->prepare('select r.id, r.klantid, r.omschrijving, r.status, k.voornaam, k.achternaam from reparatie r join klant k on r.klantid=k.id where r.status != 2'); 
+					$query = $connection->prepare('select r.id, r.klantid, r.omschrijving, r.status, k.voornaam, k.achternaam from reparatie r join klant k on r.klantid=k.id where r.status != 2 and k.inactief = 0'); 
 					$query->execute();
 					if($query->rowCount()) {
 						echo '<div class="col-lg-12"><h3>De volgende reparaties moeten nog worden uitgevoerd:</h3></div>';
