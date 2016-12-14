@@ -64,10 +64,14 @@
 				if($sendMail) {
 					//Get the customer data from the provided id
 					$customerData = getCustomerDataById($_POST['customerid']);
+					
 					//Get the email from the customerData
 					$email = $customerData[0]['email'];
 					
-					mail($email, 'Uw reparatie is afgerond', 'Hier een kort berichtje');
+					//include the mail code if it fails return mailsuccess false
+					if(!include $_SERVER['DOCUMENT_ROOT'].'/omega/resources/library/mail.php') {
+						$response['mailsuccess'] = false;
+					} 
 				}
 				
 				//If the status changes we also need to add an update to the reparatie status

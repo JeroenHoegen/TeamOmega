@@ -18,7 +18,7 @@
 			//First check if the user has authority
 			checkAuthority('klanttoevoegen');
 			
-			$query = $connection->prepare("insert into klant values(null, :voornaam, :achternaam, :adres, :woonplaats, :postcode, :email, :telefoonnummer)"); 
+			$query = $connection->prepare("insert into klant values(null, :voornaam, :achternaam, :adres, :woonplaats, :postcode, :email, :telefoonnummer, 0)"); 
 			$query->bindParam(':voornaam', $_POST['voornaam']);
 			$query->bindParam(':achternaam', $_POST['achternaam']);
 			$query->bindParam(':adres', $_POST['adres']);
