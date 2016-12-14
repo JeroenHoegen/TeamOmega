@@ -85,7 +85,7 @@
                     <li><a href="index.php"><i class="fa fa-bullseye"></i> Overzicht</a></li>
                     <li><a href="klanten.php"><i class="fa fa-tasks"></i> Klanten</a></li>
 					<li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
-					<?php if($userData['role'] <= getAuthorityLevel('accountsbeheren')) { ?>
+					<?php if($userData['role'] == getAuthorityLevel('accountsbeheren')) { ?>
 					<li class="active"><a href="#"><i class="fa fa-id-card"></i> Accounts beheren</a></li>
 					<li><a href="rollen-beheren.php"><i class="fa fa-briefcase"></i> Rollen beheren</a></li>
 					<?php } ?>
@@ -96,7 +96,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
                             <li class="divider"></li>
-                            <li><a href="logout.php"><i class="fa fa-power-off"></i> Uitloggen</a></li>
+                            <li><a href="logout.php?token=<?php echo $_SESSION['token']; ?>"><i class="fa fa-power-off"></i> Uitloggen</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -167,6 +167,7 @@
 					<div class="row">
 						<form id="addUserForm">
 							<input type="hidden" name="action" value="addUser">
+							<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
 							<div class="col-lg-6">
 								<div class="form-group">
 									<label>Gebruikersnaam</label>
