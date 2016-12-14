@@ -27,9 +27,12 @@
                     success: function(response) {
                         if(response.success) {
                             window.location = 'index.php';
-                        } else {
+                        } else if(response.blocked) {
+							alert('Je account is inactief. Neem contact op met de admin.');
+						} else {
                             $('input').attr('class', 'error-class');
-						}                   
+						}
+						$('input[name=password]').val('');
                     },
                     error: function() {
                         alert('Er is een fout opgetreden!');

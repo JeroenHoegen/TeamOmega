@@ -11,11 +11,11 @@
     if(isset($_POST['username']) && isset($_POST['password'])) {
 		//Assign the connection to a local connection variable
 		$connection = getConnection();
-        
+		
         $username = $_POST['username'];
         $password = hash('sha256', $_POST['password']);
         
-		$query = $connection->prepare('select * from gebruiker where gebruikersnaam=:username and wachtwoord=:password and inactief=0');
+		$query = $connection->prepare('select * from gebruiker where gebruikersnaam=:username and wachtwoord=:password');
 		$userData = array();
 			
 		$query->bindParam(':username', $username);
@@ -27,14 +27,18 @@
 			while($row = $query->fetch()) {
 				$userData[] = $row;
 			}
-				
-			$response['success'] = true;
-				
-			$_SESSION['username'] = $userData[0]['gebruikersnaam'];
-			$_SESSION['role'] = $userData[0]['rol'];
-			$_SESSION['firstname'] = $userData[0]['voornaam'];
-			$_SESSION['lastname'] = $userData[0]['achternaam'];
-			$_SESSION['last_activity'] = time();
+			
+			if($userData[0]['inactief'] == 1) {
+				$response['blocked'] = true;
+			} else {
+				$response['success'] = true;
+					
+				$_SESSION['username'] = $userData[0]['gebruikersnaam'];
+				$_SESSION['role'] = $userData[0]['rol'];
+				$_SESSION['firstname'] = $userData[0]['voornaam'];
+				$_SESSION['lastname'] = $userData[0]['achternaam'];
+				$_SESSION['last_activity'] = time();
+			}
 		} else {
 			$response['success'] = false;
 		}
