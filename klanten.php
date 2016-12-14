@@ -85,7 +85,7 @@
                     <li><a href="index.php"><i class="fa fa-bullseye"></i> Overzicht</a></li>
                     <li class="active"><a href="klanten.php"><i class="fa fa-tasks"></i> Klanten</a></li>
 					<li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
-					<?php if($userData['role'] == getAuthorityLevel('accountsbeheren')) { ?>
+					<?php if($userData['role'] <= getAuthorityLevel('accountsbeheren')) { ?>
 					<li><a href="accounts.php"><i class="fa fa-id-card"></i> Accounts beheren</a></li>
 					<li><a href="rollen-beheren.php"><i class="fa fa-briefcase"></i> Rollen beheren</a></li>
 					<?php } ?>
