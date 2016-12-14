@@ -65,7 +65,7 @@
 							<li class="divider"></li>
                             <li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
                             <li class="divider"></li>
-                            <li><a href="logout.php"><i class="fa fa-power-off"></i> Uitloggen</a></li>
+                            <li><a href="logout.php?token=<?php echo $_SESSION['token']; ?>"><i class="fa fa-power-off"></i> Uitloggen</a></li>
                         </ul>
                     </li>
                 </ul>

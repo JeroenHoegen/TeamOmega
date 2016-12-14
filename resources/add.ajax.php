@@ -8,7 +8,7 @@
 	//Array to store the new customerid and status
     $response = array();
     
-	if(isset($_POST['action'])) {
+	if(isset($_POST['action']) && $_POST['token'] == $_SESSION['token']) {
 		//Assign the connection to a local connection variable
 		$connection = getConnection();
 		

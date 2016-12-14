@@ -69,7 +69,7 @@
 					$.ajax({
 						url: 'resources/remove.ajax.php',
 						type: 'post',
-						data: 'action=removeMessage&id='+messageId,
+						data: 'action=removeMessage&token=<?php echo $_SESSION['token']; ?>&id='+messageId,
 						dataType: 'json',
 						success: function(response) {
 							if(response.success) {		
@@ -120,7 +120,7 @@
 							<li class="divider"></li>
                             <li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
                             <li class="divider"></li>
-                            <li><a href="logout.php"><i class="fa fa-power-off"></i> Uitloggen</a></li>
+                            <li><a href="logout.php?token=<?php echo $_SESSION['token']; ?>"><i class="fa fa-power-off"></i> Uitloggen</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -195,6 +195,7 @@
 					<div class="row">
 						<form id="sendMessageForm">
 							<input type="hidden" name="action" value="sendMessage">
+							<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
 							<div class="col-lg-12">
 								<div class="form-group">
 									<label>Naar</label>

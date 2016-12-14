@@ -6,7 +6,7 @@
 	//Require all the general functions
     require_once $_SERVER['DOCUMENT_ROOT'].'/omega/resources/library/general.func.php';
     
-	if(isset($_POST['exportgegevens']) && $_POST['action'] == 'export') {
+	if(isset($_POST['exportgegevens']) && $_POST['action'] == 'export' && $_POST['token'] == $_SESSION['token']) {
 		//First check if the user has authority
 		checkAuthority('klantenexporteren');
 		

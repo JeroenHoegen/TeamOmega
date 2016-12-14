@@ -77,7 +77,7 @@
 					$.ajax({
 						url: 'resources/remove.ajax.php',
 						type: 'post',
-						data: 'action=removeCustomer&id=<?php echo filterData($customerData[0]['id']); ?>',
+						data: 'action=removeCustomer&token=<?php echo $_SESSION['token']; ?>&id=<?php echo filterData($customerData[0]['id']); ?>',
 						dataType: 'json',
 						success: function(response) {
 							if(response.success) {					
@@ -148,7 +148,7 @@
 							<li class="divider"></li>
                             <li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
                             <li class="divider"></li>
-                            <li><a href="logout.php"><i class="fa fa-power-off"></i> Uitloggen</a></li>
+                            <li><a href="logout.php?token=<?php echo $_SESSION['token']; ?>"><i class="fa fa-power-off"></i> Uitloggen</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -184,6 +184,7 @@
 							<div class="row">
 								<form id="updateCustomerForm">
 									<input type="hidden" name="action" value="updateCustomer">
+									<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
 									<input type="hidden" name="id" value="<?php echo filterData($customerData[0]['id']); ?>">
 									<div class="col-lg-6">
 										<div class="form-group">
@@ -292,6 +293,7 @@
 					<div class="row">
 						<form id="addReparatieForm">
 							<input type="hidden" name="action" value="addReparatie">
+							<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
 							<input type="hidden" name="id" value="<?php echo filterData($customerData[0]['id']); ?>">
 							<div class="col-lg-6">
 								<div class="form-group">

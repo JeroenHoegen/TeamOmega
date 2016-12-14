@@ -38,6 +38,7 @@
 				$_SESSION['firstname'] = $userData[0]['voornaam'];
 				$_SESSION['lastname'] = $userData[0]['achternaam'];
 				$_SESSION['last_activity'] = time();
+				$_SESSION['token'] = hash('sha256', str_repeat(rand(0,33), 25));
 			}
 		} else {
 			$response['success'] = false;

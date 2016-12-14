@@ -98,7 +98,7 @@
 							<li class="divider"></li>
                             <li><a href="instellingen.php"><i class="fa fa-gear"></i> Instellingen</a></li>
                             <li class="divider"></li>
-                            <li><a href="logout.php"><i class="fa fa-power-off"></i> Uitloggen</a></li>
+                            <li><a href="logout.php?token=<?php echo $_SESSION['token']; ?>"><i class="fa fa-power-off"></i> Uitloggen</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -172,6 +172,7 @@
 					<div class="row">
 						<form id="addSupplierForm">
 							<input type="hidden" name="action" value="addSupplier">
+							<input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
 							<div class="col-lg-6">
 								<div class="form-group">
 									<label>Naam</label>
