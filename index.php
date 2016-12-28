@@ -92,7 +92,7 @@
 							echo '<div class="col-lg-3 index-distance">';
 							echo '<a href="reparatie.php?id='.$row['id'].'&returnid='.$row['klantid'].'" class="list-group-item '.$classReparatie.'">';
 							echo '<h4 class="list-group-item-heading">'.filterData($row['voornaam']).' '.filterData($row['achternaam']).'</h4>';
-							echo '<p class="list-group-item-text">'.substr($row['omschrijving'], 0, 300).'</p>';
+							echo '<p class="list-group-item-text">'.filterData(substr($row['omschrijving'], 0, 300)).'</p>';
 							echo '</a>';
 							echo '</div>';
 						}

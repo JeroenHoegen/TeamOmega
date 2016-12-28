@@ -66,13 +66,11 @@
 							$('#alert-success').fadeIn(500).delay(1000).fadeOut(500);
 							
 							if(response.newstatus != null) {
-								if(!response.mailsuccess) {
+								if(!response.mailsuccess && response.newstatus == 2) {
 									$('#alert-mail-fail').fadeIn(500);
 								} else {
 									window.location = window.location;
 								}
-								$('#statusupdates table').append('<tr id="'+response.id+'"><td>'+response.username+'</td><td>'+response.date+'</td><td>'+response.time+'</td><td>'+response.statusupdate+'</td><td><a class="removeStatus" id="'+response.id+'"><i class="fa fa-trash-o fa-lg"></i></a></td></tr>');
-								$('#statusupdate').val('');
 							}
 						} else if(response.statusupdate != null) {
 							$('#alert-success').fadeIn(500).delay(1000).fadeOut(500); 

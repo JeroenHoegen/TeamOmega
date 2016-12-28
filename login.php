@@ -28,7 +28,7 @@
                         if(response.success) {
                             window.location = 'index.php';
                         } else if(response.blocked) {
-							alert('Je account is inactief. Neem contact op met de admin.');
+							alert('Je account is geblokkeerd. Neem contact op met de admin.');
 						} else {
                             $('input').attr('class', 'error-class');
 						}

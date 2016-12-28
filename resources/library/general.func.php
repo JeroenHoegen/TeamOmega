@@ -76,6 +76,24 @@
 		}
 	}
 	
+	//This function sets the user account inactive specified
+	//by the username of the user. Returns true on success
+	//false on failure.
+	function blockUserByUsername($username) {
+		$connection = getConnection();
+		
+		$query = $connection->prepare("update gebruiker set inactief=1 where gebruikersnaam=:username");
+		$query->bindParam(':username', $username);
+			
+		$query->execute();
+		
+		if($query->rowCount()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	//Returns all the user data as an array
 	function getUserData() {
 		$userData = array('username' => $_SESSION['username'], 

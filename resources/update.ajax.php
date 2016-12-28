@@ -193,6 +193,21 @@
 			} else {
 				$response['success'] = false;
 			}
+		} else if($_POST['action'] == 'activateUser') {
+			//First check if the user has authority
+			checkAuthority('accountsbeheren');
+			
+			$query = $connection->prepare('update gebruiker set inactief=0 where gebruikersnaam=:gebruikersnaam');
+			$query->bindParam(':gebruikersnaam', $_POST['gebruikersnaam']);
+				
+			$query->execute();
+				
+			//If update statement succeed
+			if($query->rowCount()) {
+				$response['success'] = true;
+			} else {
+				$response['success'] = false;
+			}
 		}
 	} else {
 		$response['success'] = false;

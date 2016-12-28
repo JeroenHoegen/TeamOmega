@@ -22,7 +22,7 @@
 	//returns array $userDataByUsername on success, returns to accounts.php
 	//on failure
 	if(isset($_GET['gebruikersnaam'])) {
-		$query = $connection->prepare('select * from gebruiker where gebruikersnaam=:gebruikersnaam and inactief=0');
+		$query = $connection->prepare('select * from gebruiker where gebruikersnaam=:gebruikersnaam');
 		$query->bindParam(':gebruikersnaam', $_GET['gebruikersnaam']);
 		$query->execute();
 		
@@ -95,6 +95,28 @@
 				}
 			});
 			
+			$('#activateUser').click(function() {
+				if(confirm('Weet u zeker dat u het account weer wil activeren?')) {
+					event.preventDefault();    
+					$.ajax({
+						url: 'resources/update.ajax.php',
+						type: 'post',
+						data: 'action=activateUser&token=<?php echo $_SESSION['token']; ?>&gebruikersnaam=<?php echo filterData($userDataByUsername[0]['gebruikersnaam']); ?>',
+						dataType: 'json',
+						success: function(response) {
+							if(response.success) {					
+								window.location = 'accounts.php';
+							} else {
+								alert('Kan het account niet activeren, probeer het nog eens!');  
+							}
+						},
+						error: function() {
+							alert('Er is een fout opgetreden!');
+						}
+					});
+				}
+			});		
+	
 			$('#removeUser').click(function() {
 				if(confirm('Weet u zeker dat u deze gebruiker wil verwijderen?')) {
 					event.preventDefault();    
@@ -166,7 +188,11 @@
                 </div>
 				<div class="col-lg-4 text-right top-btn">
 					<a class="btn btn-danger" id="resetPassword">Reset wachtwoord</a>
+					<?php if($userDataByUsername[0]['inactief'] == 1) { ?>
+					<a class="btn btn-success" id="activateUser">Activeer account</a>
+					<?php } else { ?>
 					<a class="btn btn-danger" id="removeUser">Verwijderen</a>
+					<?php } ?>
 				</div>
             </div>
 			<div id="alert-failed" class="alert alert-danger no-display">
