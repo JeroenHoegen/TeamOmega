@@ -21,7 +21,7 @@
 	//Get all the information of the user from the provided username
 	//returns array $userDataByUsername on success, returns to accounts.php
 	//on failure
-	if(isset($_GET['gebruikersnaam'])) {
+	if(isset($_GET['gebruikersnaam']) && $_GET['gebruikersnaam'] != 'backupadmin') {
 		$query = $connection->prepare('select * from gebruiker where gebruikersnaam=:gebruikersnaam');
 		$query->bindParam(':gebruikersnaam', $_GET['gebruikersnaam']);
 		$query->execute();
@@ -190,7 +190,7 @@
 					<a class="btn btn-danger" id="resetPassword">Reset wachtwoord</a>
 					<?php if($userDataByUsername[0]['inactief'] == 1) { ?>
 					<a class="btn btn-success" id="activateUser">Activeer account</a>
-					<?php } else { ?>
+					<?php } else if ($userDataByUsername[0]['gebruikersnaam'] != $userData['username']){ ?>
 					<a class="btn btn-danger" id="removeUser">Verwijderen</a>
 					<?php } ?>
 				</div>
@@ -222,6 +222,7 @@
 											<label>Voornaam</label>
 											<input type="text" class="form-control" name="voornaam" value="<?php echo $userDataByUsername[0]['voornaam']; ?>" placeholder="Voornaam" tabindex="1" required>
 										</div>
+										<?php if ($userData['role'] == 1 && $userData['username'] != $userDataByUsername[0]['gebruikersnaam']) { ?>
 										<div class="form-group">
 											<label>Rol</label>
 											<select class="form-control" name="rol" id="rol" tabindex="3">
@@ -230,6 +231,9 @@
 												<option value="1" <?php if($userDataByUsername[0]['rol'] == 1) {echo ' selected';} ?>>Beheerder</option>
 											</select>
 										</div>
+										<?php } else { ?>
+										<input type="hidden" value="1" name="rol">
+										<?php } ?>
 									</div>
 									<div class="col-lg-6">
 										<div class="form-group">

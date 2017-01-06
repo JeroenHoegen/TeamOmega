@@ -140,7 +140,7 @@
 		} else if($_POST['action'] == 'updateUser') {
 			//First check if the user has authority
 			checkAuthority('accountsbeheren');
-			
+						
 			$query = $connection->prepare('update gebruiker set rol=:rol, voornaam=:voornaam, achternaam=:achternaam where gebruikersnaam=:gebruikersnaam');
 			$query->bindParam(':rol', $_POST['rol']);
 			$query->bindParam(':voornaam', $_POST['voornaam']);

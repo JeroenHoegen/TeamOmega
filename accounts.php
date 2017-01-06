@@ -141,7 +141,7 @@
 						</thead>
 						<tbody>
 							<?php 
-								$query = $connection->prepare('select g.gebruikersnaam, g.voornaam, g.achternaam, g.inactief, r.naam from gebruiker g join rol r on g.rol=r.id order by g.rol');
+								$query = $connection->prepare('select g.gebruikersnaam, g.voornaam, g.achternaam, g.inactief, r.naam from gebruiker g join rol r on g.rol=r.id where g.gebruikersnaam != "backupadmin" order by g.rol');
 								$query->execute();
 								if($query->rowCount()) {
 									while($row = $query->fetch()) {

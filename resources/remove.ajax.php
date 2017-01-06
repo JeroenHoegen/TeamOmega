@@ -79,14 +79,19 @@
 			//First check if the user has authority
 			checkAuthority('accountsbeheren');
 			
-			$query = $connection->prepare('update gebruiker set inactief=1 where gebruikersnaam=:gebruikersnaam');
-			$query->bindParam(':gebruikersnaam', $_POST['gebruikersnaam']);
-				
-			$query->execute();
-				
-			//If insert statement succeed
-			if($query->rowCount()) {
-				$response['success'] = true;
+			//Check if the user wants to delete his own account
+			if($_POST['gebruikersnaam'] != getUserData()['username']) {				
+				$query = $connection->prepare('update gebruiker set inactief=1 where gebruikersnaam=:gebruikersnaam');
+				$query->bindParam(':gebruikersnaam', $_POST['gebruikersnaam']);
+					
+				$query->execute();
+					
+				//If insert statement succeed
+				if($query->rowCount()) {
+					$response['success'] = true;
+				} else {
+					$response['success'] = false;
+				}
 			} else {
 				$response['success'] = false;
 			}
